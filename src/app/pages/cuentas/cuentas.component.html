@@ -1,0 +1,92 @@
+<div class="card">
+    <button pButton label="Filtrar" icon="pi pi-filter" (click)="mostrarFiltro = !mostrarFiltro">
+    </button>
+    <!-- Div de filtros -->
+    <form [formGroup]="formBusqueda" novalidate>
+        <div *ngIf="mostrarFiltro" class="grid grid-cols-12 gap-4 items-end">
+            <div class="col-span-3">
+                <label class="block mb-1 text-sm">Tipo de Búsqueda</label>
+                <p-select class="w-full" formControlName="tipoFiltro" (onChange)="changeModelTipoDocumento($event)"
+                    [options]="tipoBusqueda" optionLabel="field" optionValue="id"
+                    placeholder="Seleccione Tipo de Búsqueda">
+                </p-select>
+            </div>
+
+            <div class="col-span-3" *ngIf="formBusqueda.value.tipoFiltro == '0'">
+                <label class="block mb-1 text-sm">Tipo Documento</label>
+                <p-select class="w-full" formControlName="tipoDocumento" (onChange)="changeModelTipoDocumento($event)"
+                    [options]="documentos" optionLabel="descripcion" optionValue="id" placeholder="Seleccione tipo">
+                </p-select>
+            </div>
+            <div class="col-span-3" *ngIf="formBusqueda.value.tipoFiltro == '0'">
+                <label class="block mb-1 text-sm">N° Documento</label>
+                <input class="w-full" formControlName="nroDocumento" #doc pInputText type="text"
+                    placeholder="Ingrese N° Documento" [attr.minlength]="nroCaracter" [attr.maxlength]="nroCaracter"
+                    [style]="{'text-transform': 'uppercase'}" autocomplete="off"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');" />
+                <!-- <small class="text-gray-500 text-xs text-right" *ngIf="nroCaracter !== 0">
+                    {{ doc.value.length || 0 }} / {{ nroCaracter }}
+                </small> -->
+            </div>
+            <div class="col-span-3" *ngIf="formBusqueda.value.tipoFiltro == '3'">
+                <label class="block mb-1 text-sm">Nro Tarjeta</label>
+                <input class="w-full" formControlName="nroCuenta" #accountTarjeta pInputText type="text"
+                    placeholder="Ingrese Nro Tarjeta" [attr.minlength]="16" [attr.maxlength]="16" autocomplete="off"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');" />
+                <!-- <small class="text-gray-500 text-xs text-right" *ngIf="nroCaracter !== 0">
+                    {{ accountTarjeta.value.length || 0 }} / {{ nroCaracter }}
+                </small> -->
+            </div>
+            <div class="col-span-6 flex items-end justify-end gap-2">
+                <!-- Botones -->
+                <button pButton label="Buscar" icon="pi pi-search" (click)="buscar()">
+                </button>
+                <button pButton label="Limpiar" icon="pi pi-times" class="p-button-outlined" (click)="limpiar()">
+                </button>
+            </div>
+        </div>
+    </form>    
+    <br>
+    <br>
+    <p-table #dt1 [value]="datosCuentas"    
+       
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+        [showCurrentPageReport]="true"
+        dataKey="idCuenta" [rows]="10" [columns]="cols" [loading]="loading" [rowHover]="true"
+        [showGridlines]="true" [paginator]="true" responsiveLayout="scroll" [totalRecords]="datosCuentas.length">
+        <ng-template #header let-columns>
+            <tr>
+                <th *ngFor="let col of columns" [ngStyle]="{'text-align': col.align}">
+                    {{col.header}}
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-rowData
+                            style="cursor: pointer;">
+            <tr  [pContextMenuRow]="rowData" (click)="goToAccount(rowData)">
+                <td>{{ rowData.producto }}</td>
+                <td>{{rowData.nombresApellidos}}</td>
+                <td style="text-align: center;">{{rowData.numeroCuenta}}</td>
+                <td style="text-align: center;">
+                    <span [ngClass]="rowData.codEstadoCuenta == '01' ? 'p-tag p-tag-success' : 
+                                     rowData.codEstadoCuenta == '02' ? 'p-tag p-tag-warning': 'p-tag p-tag-danger'"
+                        style="font-size: 12px;">{{rowData.motivoBloqueo}}</span>
+                </td>
+                <td style="text-align: center;">{{rowData.fechaApertura }}</td>
+                <td style="text-align: center;">{{rowData.fechaBaja }}</td>
+                <td style="text-align: center;">{{rowData.desCodTipoDoc}}</td>
+                <td style="text-align: center;">{{rowData.numDocIdentidad}}</td>
+            </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+            <tr>
+                <td colspan="8">No customers found.</td>
+            </tr>
+        </ng-template>
+        <ng-template #loadingbody>
+            <tr>
+                <td colspan="8">Loading customers data. Please wait.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

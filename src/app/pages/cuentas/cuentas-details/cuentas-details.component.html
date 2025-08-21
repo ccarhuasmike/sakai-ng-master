@@ -1,0 +1,178 @@
+<!-- <div class="card">
+    <div class="grid grid-cols-12">
+        <div class="col-span-3">
+            <div class="p-fluid">
+                <div class="p-field">
+                    <label>Número cuenta cliente</label>
+                    <div>{{ datosCuenta.numeroCuenta }}</div>
+                </div>
+
+                <div class="p-field">
+                    <label>Número cuenta CCI</label>
+                    <div>{{ datosCuenta.numeroCuentaCci }}</div>
+                </div>
+
+                <div class="p-field" *ngIf="datosInteresTarifario?.codigoGrupoCuenta">
+                    <label>Pct</label>
+                    <div>{{ datosInteresTarifario.codigoGrupoCuenta }}</div>
+                </div>
+
+                <div class="p-field" *ngIf="datosInteresTarifario?.tasaEquivalenteAnual">
+                    <label>Tasa</label>
+                    <div>{{ datosInteresTarifario.tasaEquivalenteAnual | number:'1.2-2' }} %</div>
+                </div>
+
+                <div class="p-field">
+                    <label>Fecha apertura</label>
+                    <div>{{ datosCuenta.fechaApertura | date:'DD/MM/YYYY' }}</div>
+                </div>
+
+                <div class="p-field" *ngIf="datosCuenta.fechaBaja">
+                    <label>Fecha cancelación</label>
+                    <div>{{ datosCuenta.fechaBaja | date:'DD/MM/YYYY' }}</div>
+                </div>
+
+                <div class="p-field">
+                    <label>Bloqueo</label>
+                    <div>{{ datosCuenta.motivoBloqueo }}</div>
+                </div>
+
+
+                <div class="p-field">
+                    <label>Productos relacionados</label>
+                    <a style="cursor:pointer; text-decoration: underline;" (click)="listAccounts()">
+                        {{ listProductos.length }} Productos
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<div class="card">
+    <div class="font-semibold text-xl mb-4">Saldos</div>
+    <p-fieldset legend="Legend">
+        <p-table #dt2 [value]="datosSaldoPorPlan?.planes" [loading]="loadingSaldos">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 46%;" scope="col">Plan</th>
+                    <th style="width: 18%; text-align: right;" scope="col">Capital</th>
+                    <th style="width: 18%; text-align: right;" scope="col">Interés</th>
+                    <th style="width: 18%; text-align: right;" scope="col">Total</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData>
+                <tr>
+                    <td>{{rowData.plan}}</td>
+                    <td style="text-align: right;">{{rowData.capital | number:'1.2-2'}}</td>
+                    <td style="text-align: right;">{{rowData.interes | number:'1.2-2'}}</td>
+                    <td style="text-align: right;">{{rowData.total | number:'1.2-2'}}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <tr>
+                    <td>Total</td>
+                    <td style="text-align: right;">{{datosSaldoPorPlan?.saldoCapital | number:'1.2-2'}}</td>
+                    <td style="text-align: right;">{{datosSaldoPorPlan?.saldoInteres | number:'1.2-2'}}</td>
+                    <td style="text-align: right;">{{datosSaldoPorPlan?.saldoTotal | number:'1.2-2'}}</td>
+                </tr>
+            </ng-template>
+
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="8">No customers found.</td>
+                </tr>
+            </ng-template>
+            <ng-template #loadingbody>
+                <tr>
+                    <td colspan="8">Loading customers data. Please wait.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <br>
+        <br>
+        <p-table [value]="saldoAutorizado">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="text-align: right;" scope="col">Pend. Retención</th>
+                    <th style="text-align: right;" scope="col">Memo Crédito</th>
+                    <th style="text-align: right;" scope="col">Memo Débito</th>
+                    <th style="text-align: right;" scope="col">Saldo Autorizado</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData>
+                <tr>
+                    <td style="text-align: right;">{{rowData.saldoPendiente | number:'1.2-2'}}</td>
+                    <td style="text-align: right;">{{rowData.saldoCargo | number:'1.2-2'}}</td>
+                    <td style="text-align: right;">{{rowData.saldoAbono | number:'1.2-2'}}</td>
+                    <td style="text-align: right;">{{rowData.saldoTotal | number:'1.2-2'}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+    </p-fieldset>
+</div>
+
+<div class="card">
+    <div class="font-semibold text-xl mb-4">Bloqueos Cuenta</div>
+    <p-fieldset legend="Legend">
+        <p-table #dt3 resizableColumns="true" rowExpandMode="single" 
+            styleClass="p-datatable-striped p-datatable-gridlines"
+            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros" [paginator]="true"
+            [showCurrentPageReport]="true" [filterDelay]="0" dataKey="idBloqueo" [rows]="rows"
+            [value]="datosCuentaBloqueos" [totalRecords]="datosCuentaBloqueos.length" [loading]="loadingCuentaBloqueos">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col" style="text-align: center;">
+                        <!-- <button mat-icon-button color="primary" (click)="getCuentaBloqueos()" matTooltipPosition="below"
+                            matTooltip="Refrescar">
+                            <mat-icon>refresh</mat-icon>
+                        </button> -->
+                        <button color="primary" (click)="getCuentaBloqueos()" 
+                            >                            
+                        </button>
+                    </th>
+                    <th scope="col">Estado bloqueo</th>
+                    <th scope="col">Razón bloqueo</th>
+                    <th style="text-align: center;" scope="col">Fecha bloqueo</th>
+                    <th style="text-align: center;" scope="col">Archivo bloqueo</th>
+                    <th scope="col">Descripcion</th>
+                    <th style="text-align: center;" scope="col">Usuario creación</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-expanded="expanded">
+                <tr id="tableWithDetails">
+                    <td style="text-align: center;">
+                        <!-- <button mat-icon-button [matMenuTriggerFor]="menu" matTooltipPosition="above"
+                            matTooltip="Opciones">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item (click)="descargarTemplateConstanciaBloqueoCuentaPdf(rowData)">
+                                <i class="pi pi-cog" aria-hidden="true"></i>
+                                <span>Constancia de bloqueo</span>
+                            </button>
+                        </mat-menu> -->
+                    </td>
+                    <td>{{rowData.descripcionEstado}}</td>
+                    <td>{{rowData.descripcionMotivoBloqueo}}</td>
+                    <td style="text-align: center;">{{rowData.fechaBloqueo | date:'DD/MM/YYYY HH:mm:ss'}}</td>
+                    <td style="text-align: center;">
+                        <a href="javascript:void(0)" matTooltipPosition="above" matTooltip="Ver archivo"
+                            *ngIf="rowData.archivoSustento"
+                            (click)="openDialogVerArchivo(rowData.archivoSustento, rowData.nombreSustento)">{{rowData.nombreSustento}}
+                            <em class="pi pi-download"></em>
+                        </a>
+                    </td>
+                    <td>{{rowData.descripcion}}</td>
+                    <td style="text-align: center;">{{rowData.usuarioCreacion}}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7" style="text-align:left">Sin registros encontrados</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-fieldset>
+</div>
