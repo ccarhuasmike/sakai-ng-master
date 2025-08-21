@@ -1,122 +1,164 @@
-<!-- <div class="card">
-    <div class="grid grid-cols-12">
-        <div class="col-span-3">
-            <div class="p-fluid">
-                <div class="p-field">
-                    <label>Número cuenta cliente</label>
-                    <div>{{ datosCuenta.numeroCuenta }}</div>
-                </div>
+<div class="grid grid-flow-col grid-rows-3 gap-4">
+    <div class="row-span-3">
+        <div class="card">
+            <div class="font-semibold text-xl mb-4">Oh!Pay</div>
+            <p-fieldset legend="Legend">
+                <div class="grid grid-cols-12 gap-4">
+                    <div class="col-span-12">
+                        <label class="block mb-1 text-sm">Número cuenta cliente</label>
+                        <p>410000809478</p>
+                    </div>
+                    <div class="col-span-12">
+                        <label class="block mb-1 text-sm">Número cuenta cci</label>
+                        <p>09400141000080947855</p>
+                    </div>
 
-                <div class="p-field">
-                    <label>Número cuenta CCI</label>
-                    <div>{{ datosCuenta.numeroCuentaCci }}</div>
-                </div>
+                    <div class="col-span-12">
+                        <label class="block mb-1 text-sm">Pct</label>
+                        <p>A01</p>
+                    </div>
+                    <div class="col-span-12">
+                        <label class="block mb-1 text-sm">Tasa</label>
+                        <p>2.50 %</p>
+                    </div>
 
-                <div class="p-field" *ngIf="datosInteresTarifario?.codigoGrupoCuenta">
-                    <label>Pct</label>
-                    <div>{{ datosInteresTarifario.codigoGrupoCuenta }}</div>
-                </div>
+                    <div class="col-span-12">
+                        <label class="block mb-1 text-sm">Fecha apertura</label>
+                        <p>08/08/2025</p>
+                    </div>
+                    <div class="col-span-12">
+                        <label class="block mb-1 text-sm">Bloqueo</label>
+                        <p>ACTIVA</p>
+                    </div>
 
-                <div class="p-field" *ngIf="datosInteresTarifario?.tasaEquivalenteAnual">
-                    <label>Tasa</label>
-                    <div>{{ datosInteresTarifario.tasaEquivalenteAnual | number:'1.2-2' }} %</div>
+                    <div class="col-span-12">
+                        <label class="block mb-1 text-sm">Productos relacionados</label>
+                        <p>3 Productos</p>
+                    </div>
                 </div>
-
-                <div class="p-field">
-                    <label>Fecha apertura</label>
-                    <div>{{ datosCuenta.fechaApertura | date:'DD/MM/YYYY' }}</div>
-                </div>
-
-                <div class="p-field" *ngIf="datosCuenta.fechaBaja">
-                    <label>Fecha cancelación</label>
-                    <div>{{ datosCuenta.fechaBaja | date:'DD/MM/YYYY' }}</div>
-                </div>
-
-                <div class="p-field">
-                    <label>Bloqueo</label>
-                    <div>{{ datosCuenta.motivoBloqueo }}</div>
-                </div>
-
-
-                <div class="p-field">
-                    <label>Productos relacionados</label>
-                    <a style="cursor:pointer; text-decoration: underline;" (click)="listAccounts()">
-                        {{ listProductos.length }} Productos
-                    </a>
-                </div>
-            </div>
+            </p-fieldset>
         </div>
     </div>
-</div> -->
+    <div class="row-span-3">
+        <div class="card">
+            <div class="font-semibold text-xl mb-4">Cliente</div>
+            <p-fieldset legend="Legend">
+                <div class="grid grid-cols-12 gap-4">
+                    <div class="col-span-6">
+                        <label class="block mb-1 text-sm">Tipo documento</label>
+                        <p>DNI</p>
+                    </div>
+                    <div class="col-span-6">
+                        <label class="block mb-1 text-sm">Número documento</label>
+                        <p>01248626</p>
+                    </div>
 
-<div class="card">
-    <div class="font-semibold text-xl mb-4">Saldos</div>
-    <p-fieldset legend="Legend">
-        <p-table #dt2 [value]="datosSaldoPorPlan?.planes" [loading]="loadingSaldos">
-            <ng-template pTemplate="header">
-                <tr>
-                    <th style="width: 46%;" scope="col">Plan</th>
-                    <th style="width: 18%; text-align: right;" scope="col">Capital</th>
-                    <th style="width: 18%; text-align: right;" scope="col">Interés</th>
-                    <th style="width: 18%; text-align: right;" scope="col">Total</th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-rowData>
-                <tr>
-                    <td>{{rowData.plan}}</td>
-                    <td style="text-align: right;">{{rowData.capital | number:'1.2-2'}}</td>
-                    <td style="text-align: right;">{{rowData.interes | number:'1.2-2'}}</td>
-                    <td style="text-align: right;">{{rowData.total | number:'1.2-2'}}</td>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="footer">
-                <tr>
-                    <td>Total</td>
-                    <td style="text-align: right;">{{datosSaldoPorPlan?.saldoCapital | number:'1.2-2'}}</td>
-                    <td style="text-align: right;">{{datosSaldoPorPlan?.saldoInteres | number:'1.2-2'}}</td>
-                    <td style="text-align: right;">{{datosSaldoPorPlan?.saldoTotal | number:'1.2-2'}}</td>
-                </tr>
-            </ng-template>
+                    <div class="col-span-6">
+                        <label class="block mb-1 text-sm">Nombre completo</label>
+                        <p>Luis Gerardo Martinez</p>
+                    </div>
+                    <div class="col-span-6">
+                        <label class="block mb-1 text-sm">Celular</label>
+                        <p>901248626</p>
+                    </div>
 
-            <ng-template #emptymessage>
-                <tr>
-                    <td colspan="8">No customers found.</td>
-                </tr>
-            </ng-template>
-            <ng-template #loadingbody>
-                <tr>
-                    <td colspan="8">Loading customers data. Please wait.</td>
-                </tr>
-            </ng-template>
-        </p-table>
-        <br>
-        <br>
-        <p-table [value]="saldoAutorizado">
-            <ng-template pTemplate="header">
-                <tr>
-                    <th style="text-align: right;" scope="col">Pend. Retención</th>
-                    <th style="text-align: right;" scope="col">Memo Crédito</th>
-                    <th style="text-align: right;" scope="col">Memo Débito</th>
-                    <th style="text-align: right;" scope="col">Saldo Autorizado</th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-rowData>
-                <tr>
-                    <td style="text-align: right;">{{rowData.saldoPendiente | number:'1.2-2'}}</td>
-                    <td style="text-align: right;">{{rowData.saldoCargo | number:'1.2-2'}}</td>
-                    <td style="text-align: right;">{{rowData.saldoAbono | number:'1.2-2'}}</td>
-                    <td style="text-align: right;">{{rowData.saldoTotal | number:'1.2-2'}}</td>
-                </tr>
-            </ng-template>
-        </p-table>
+                    <div class="col-span-6">
+                        <label class="block mb-1 text-sm">Correo</label>
+                        <p>DNI</p>
+                    </div>
+                    <div class="col-span-6">
+                        <label class="block mb-1 text-sm">Número documento</label>
+                        <p>hrcp.franklin.escobar@somosoh.pe</p>
+                    </div>
 
-    </p-fieldset>
+                    <div class="col-span-6">
+                        <label class="block mb-1 text-sm">Registro CCE</label>
+                        <p>DNI</p>
+                    </div>
+                    <div class="col-span-6">
+                        <label class="block mb-1 text-sm">Domicilio</label>
+                        <p>XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</p>
+                    </div>
+                </div>
+            </p-fieldset>
+        </div>
+    </div>
+    <div class="col-span-2">
+        <div class="card">
+            <div class="font-semibold text-xl mb-4">Saldos</div>
+            <p-fieldset legend="Legend">
+                <p-table #dt2 [value]="datosSaldoPorPlan?.planes" [loading]="loadingSaldos">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 46%;" scope="col">Plan</th>
+                            <th style="width: 18%; text-align: right;" scope="col">Capital</th>
+                            <th style="width: 18%; text-align: right;" scope="col">Interés</th>
+                            <th style="width: 18%; text-align: right;" scope="col">Total</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData>
+                        <tr>
+                            <td>{{rowData.plan}}</td>
+                            <td style="text-align: right;">{{rowData.capital | number:'1.2-2'}}</td>
+                            <td style="text-align: right;">{{rowData.interes | number:'1.2-2'}}</td>
+                            <td style="text-align: right;">{{rowData.total | number:'1.2-2'}}</td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="footer">
+                        <tr>
+                            <td>Total</td>
+                            <td style="text-align: right;">{{datosSaldoPorPlan?.saldoCapital | number:'1.2-2'}}</td>
+                            <td style="text-align: right;">{{datosSaldoPorPlan?.saldoInteres | number:'1.2-2'}}</td>
+                            <td style="text-align: right;">{{datosSaldoPorPlan?.saldoTotal | number:'1.2-2'}}</td>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template #emptymessage>
+                        <tr>
+                            <td colspan="8">No customers found.</td>
+                        </tr>
+                    </ng-template>
+                    <ng-template #loadingbody>
+                        <tr>
+                            <td colspan="8">Loading customers data. Please wait.</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+                <br>
+                <br>
+                <p-table [value]="saldoAutorizado">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="text-align: right;" scope="col">Pend. Retención</th>
+                            <th style="text-align: right;" scope="col">Memo Crédito</th>
+                            <th style="text-align: right;" scope="col">Memo Débito</th>
+                            <th style="text-align: right;" scope="col">Saldo Autorizado</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData>
+                        <tr>
+                            <td style="text-align: right;">{{rowData.saldoPendiente | number:'1.2-2'}}</td>
+                            <td style="text-align: right;">{{rowData.saldoCargo | number:'1.2-2'}}</td>
+                            <td style="text-align: right;">{{rowData.saldoAbono | number:'1.2-2'}}</td>
+                            <td style="text-align: right;">{{rowData.saldoTotal | number:'1.2-2'}}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+
+            </p-fieldset>
+        </div>
+    </div>    
 </div>
+
+
+
+
+
 
 <div class="card">
     <div class="font-semibold text-xl mb-4">Bloqueos Cuenta</div>
     <p-fieldset legend="Legend">
-        <p-table #dt3 resizableColumns="true" rowExpandMode="single" 
+        <p-table #dt3 resizableColumns="true" rowExpandMode="single"
             styleClass="p-datatable-striped p-datatable-gridlines"
             currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros" [paginator]="true"
             [showCurrentPageReport]="true" [filterDelay]="0" dataKey="idBloqueo" [rows]="rows"
@@ -128,8 +170,7 @@
                             matTooltip="Refrescar">
                             <mat-icon>refresh</mat-icon>
                         </button> -->
-                        <button color="primary" (click)="getCuentaBloqueos()" 
-                            >                            
+                        <button color="primary" (click)="getCuentaBloqueos()">
                         </button>
                     </th>
                     <th scope="col">Estado bloqueo</th>
@@ -140,7 +181,7 @@
                     <th style="text-align: center;" scope="col">Usuario creación</th>
                 </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-rowData let-expanded="expanded">
+            <ng-template pTemplate="body" let-rowData>
                 <tr id="tableWithDetails">
                     <td style="text-align: center;">
                         <!-- <button mat-icon-button [matMenuTriggerFor]="menu" matTooltipPosition="above"
@@ -174,5 +215,251 @@
                 </tr>
             </ng-template>
         </p-table>
+    </p-fieldset>
+</div>
+
+<div class="card">
+    <div class="font-semibold text-xl mb-4">Movimientos</div>
+    <p-fieldset legend="Legend">
+        <p-table #dt6 resizableColumns="true" rowExpandMode="single"
+            styleClass="p-datatable-striped p-datatable-gridlines"
+            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros" [paginator]="true"
+            [showCurrentPageReport]="true" [filterDelay]="0" dataKey="idMovimiento" [rows]="rows"
+            [value]="datosMovimientos" [totalRecords]="datosMovimientos.length" [loading]="loadingMovimientos">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">
+                        <!-- <button mat-icon-button color="primary" (click)="getCuentaMovimientos()"
+                            matTooltipPosition="below" matTooltip="Refrescar">
+                            <mat-icon>refresh</mat-icon>
+                        </button> -->
+                    </th>
+                    <th style="text-align: center;" scope="col">Fecha Movimiento</th>
+                    <th style="text-align: center;" scope="col">Fecha Proceso</th>
+                    <th style="text-align: center;" scope="col" *ngIf="showCardContainer">Num. Tarjeta</th>
+                    <th style="text-align: center;" scope="col">Cod. Descripción</th>
+                    <th scope="col">Descripción</th>
+                    <th style="text-align: center;" scope="col">Tipo Movimiento</th>
+                    <th style="text-align: center;" scope="col">Plan</th>
+                    <th style="text-align: right;" scope="col">Importe</th>
+                    <th style="text-align: center;" scope="col">Estado Confirmación</th>
+                    <th style="text-align: center;" scope="col">Red(descripción)</th>
+                    <th style="text-align: center;" scope="col">Reversado</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData>
+                <tr id="tableWithIcon">
+                    <td>
+                        <!-- <a href="#" [pRowToggler]="rowData" *ngIf="rowData.itf || rowData.comision">
+                            <em [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></em>
+                        </a> -->
+                    </td>
+                    <td style="text-align: center;">
+                        <button class="buttonOption" (click)="openDialogDetalleMovimiento(rowData)" title="Detalle">
+                            <!-- <mat-icon class="iconCustomize">visibility</mat-icon> -->
+                        </button>
+                    </td>
+                    <td style="text-align: center;">{{rowData.fechaTransaccion | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                    <td style="text-align: center;">{{rowData.fechaContable | date:'dd/MM/yyyy'}}</td>
+                    <td style="text-align: center;" *ngIf="showCardContainer">{{rowData.enmascarado}}</td>
+                    <td style="text-align: center;">{{rowData.codigoClasificacionTransaccion}}</td>
+                    <td>{{rowData.descripcion}}</td>
+                    <td style="text-align: center;">{{rowData.tipoMovimiento}}</td>
+                    <td style="text-align: center;">{{rowData.codigoTipoPlan}}</td>
+                    <td style="text-align: right;">{{rowData.monto | currency:"&nbsp;":"symbol":'1.2-2'}}
+                    <td style="text-align: center;">
+                        <span
+                            [ngClass]="rowData.estadoConfirmacion == 'CONFIRMED' ? 'p-tag p-tag-success' : 'p-tag p-tag-warning'"
+                            style="font-size: 12px;">{{rowData.estadoConfirmacion}}</span>
+                    </td>
+                    <td style="text-align: center;">{{rowData.descOrigenInt}}</td>
+                    <td style="text-align: center;">{{rowData.reversado ? 'Si' : 'No'}}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="rowexpansion" let-rowData>
+                <tr>
+                    <td></td>
+                    <td colspan="4" style=" padding: 0px; padding-left: 40px !important;" fusePerfectScrollbar>
+                        <!-- <mat-list>
+                            <div class="p-grid p-fluid">
+                                <div class="p-col-12 p-md-6 p-lg-4">
+                                    <mat-list-item>
+                                        <h3 matLine><strong>ITF</strong></h3>
+                                        <p matLine>
+                                            <span class="secondary-text">{{rowData.itf |
+                                                currency:"&nbsp;":"symbol":'1.2-2'}}</span>
+                                        </p>
+                                    </mat-list-item>
+                                </div>
+                                <div class="p-col-12 p-md-6 p-lg-4">
+                                    <mat-list-item>
+                                        <h3 matLine><strong>Comisión</strong></h3>
+                                        <p matLine>
+                                            <span class="secondary-text">{{rowData.comision
+                                                |currency:"&nbsp;":"symbol":'1.2-2'}}</span>
+                                        </p>
+                                    </mat-list-item>
+                                </div>
+                            </div>
+                        </mat-list> -->
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="12" style="text-align:left">Sin registros encontrados</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-fieldset>
+</div>
+
+<div class="card">
+    <div class="font-semibold text-xl mb-4">Retenciones</div>
+    <p-fieldset legend="Legend">
+        <!-- <p-table #dt7 resizableColumns="true" rowExpandMode="single"
+            styleClass="p-datatable-striped p-datatable-gridlines"
+            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros" [paginator]="true"
+            [showCurrentPageReport]="true" [filterDelay]="0" dataKey="idRetencion" [rows]="rows"
+            [value]="datosRetenciones" (onRowExpand)="getPagosRetencion($event)"
+            [totalRecords]="datosRetenciones.length" [loading]="loadingRetenciones">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">
+                        <button mat-icon-button color="primary" (click)="getCuentaRetenciones()"
+                            matTooltipPosition="below" matTooltip="Refrescar">
+                            <mat-icon>refresh</mat-icon>
+                        </button>
+                    </th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col">Estado</th>
+                    <th style="text-align: right;" scope="col">Importe solicitado</th>
+                    <th style="text-align: right;" scope="col">Importe retenido</th>
+                    <th style="text-align: right;" scope="col">Importe pendiente</th>
+                    <th style="text-align: right;" scope="col">Importe liberado</th>
+                    <th style="text-align: right;" scope="col">Importe pagado</th>
+                    <th style="text-align: center;" scope="col">Fecha retención</th>
+                    <th style="text-align: center;" scope="col">Archivo retención</th>
+                    <th style="text-align: center;" scope="col">Usuario creación</th>
+                    <th style="text-align: center;" scope="col">Fecha liberación</th>
+                    <th style="text-align: center;" scope="col">Archivo liberación</th>
+                    <th style="text-align: center;" scope="col">Usuario liberación</th>
+                    <th style="text-align: center;" scope="col">Fecha pago</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-expanded="expanded">
+                <tr id="tableWithDetails">
+                    <td style="text-align: center;">
+                        <a *ngIf="rowData.descEstadoRetencion == 'Saldo Pagado'" href="#" [pRowToggler]="rowData">
+                            <em [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></em>
+                        </a>
+                    </td>
+                    <td style="text-align: center;">
+                        <div
+                            *appDisableContentByRole="[roles.CONSULTA, roles.ATENCION_CLIENTE, roles.ATENCION_CLIENTE_TD, roles.JEFE_VENTAS]">
+                            <button *ngIf="                                                            
+                                                            rowData.descEstadoRetencion == 'Saldo Retenido'"
+                                mat-icon-button [matMenuTriggerFor]="menu" matTooltipPosition="above"
+                                matTooltip="Opciones">
+                                <mat-icon>more_vert</mat-icon>
+                            </button>
+                        </div>
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item [disabled]="disableActions"
+                                (click)="openDialogRevertirRetencion(rowData)">
+                                <i class="pi pi-replay" aria-hidden="true"></i>
+                                <span>Liberar retención</span>
+                            </button>
+                            <button mat-menu-item [disabled]="disableActions"
+                                (click)="openDialogPagarRetencion(rowData)">
+                                <i class="pi pi-dollar" aria-hidden="true"></i>
+                                <span>Pagar retención</span>
+                            </button>
+                        </mat-menu>
+                    </td>
+                    <td>{{rowData.descTipoRetencion}}</td>
+                    <td>{{rowData.descEstadoRetencion}}</td>
+                    <td style="text-align: right;">{{rowData.importeTotal | currency:"&nbsp;":"symbol":'1.2-2'}}</td>
+                    <td style="text-align: right;">{{rowData.importeParcial | currency:"&nbsp;":"symbol":'1.2-2'}}</td>
+                    <td style="text-align: right;">{{rowData.importePendiente | currency:"&nbsp;":"symbol":'1.2-2'}}
+                    </td>
+                    <td style="text-align: right;">{{rowData.importeLiberado | currency:"&nbsp;":"symbol":'1.2-2'}}</td>
+                    <td style="text-align: right;">{{rowData.importePagado | currency:"&nbsp;":"symbol":'1.2-2'}}</td>
+                    <td style="text-align: center;">{{rowData.fechaRetencion | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                    <td style="text-align: center;">
+                        <a href="javascript:void(0)" matTooltipPosition="above" matTooltip="Ver archivo"
+                            *ngIf="rowData.archivoSustento"
+                            (click)="openDialogVerArchivo(rowData.archivoSustento, rowData.nombreSustento)">{{rowData.nombreSustento}}
+                            <em class="pi pi-download"></em></a>
+                    </td>
+                    <td style="text-align: center;">{{rowData.usuarioCreacion}}</td>
+                    <td style="text-align: center;">{{rowData.fechaLiberacion | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                    <td style="text-align: center;">
+                        <a href="javascript:void(0)" matTooltipPosition="above" matTooltip="Ver archivo"
+                            *ngIf="rowData.archivoSustentoReversa"
+                            (click)="openDialogVerArchivo(rowData.archivoSustentoReversa, rowData.nombreSustentoReversa)">{{rowData.nombreSustentoReversa}}
+                            <em class="pi pi-download"></em></a>
+                    </td>
+                    <td style="text-align: center;">{{rowData.usuarioModificacion}}</td>
+                    <td style="text-align: center;">{{rowData.fechaPago | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="rowexpansion" let-rowData>
+                <tr>
+                    <td colspan="16" style="padding-left: 40px !important;" fusePerfectScrollbar>
+                        <p-tabView>
+                            <p-tabPanel header="Pagos">
+                                <p-table #dt8 columnResizeMode="expand" [filterDelay]="0" [paginator]="false"
+                                    [value]="datosPagoRetencion" [totalRecords]="datosPagoRetencion.length"
+                                    [loading]="loadingPagoRetencion">
+                                    <ng-template pTemplate="header">
+                <tr>
+                    <th style="text-align: center;" scope="col">Fecha creación</th>
+                    <th style="text-align: center;" scope="col">Estado</th>
+                    <th style="text-align: center;" scope="col">Banco</th>
+                    <th style="text-align: center;" scope="col">Ruc</th>
+                    <th style="text-align: right;" scope="col">Importe</th>
+                    <th style="text-align: center;" scope="col">Tipo</th>
+                    <th style="text-align: center;" scope="col">Archivo pago</th>
+                    <th style="text-align: center;" scope="col">Usuario creación</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData>
+                <tr id="tableWithoutIcon">
+                    <td style="text-align: center;">{{rowData.fechaCreacion | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                    <td style="text-align: center;">{{rowData.descripcionEstado}}</td>
+                    <td style="text-align: center;">{{rowData.bancoCuentaBeneficiario}}</td>
+                    <td style="text-align: center;">{{rowData.numeroDocumento}}</td>
+                    <td style="text-align: right;">{{rowData.importePago | currency:"&nbsp;":"symbol":'1.2-2'}}</td>
+                    <td style="text-align: center;">{{rowData.tipoDesembolso}}</td>
+                    <td style="text-align: center;">
+                        <a href="javascript:void(0)" matTooltipPosition="above" matTooltip="Ver archivo"
+                            *ngIf="rowData.archivoSustento"
+                            (click)="openDialogVerArchivo(rowData.archivoSustento, rowData.nombreArchivoSustento)">{{rowData.nombreArchivoSustento}}
+                            <em class="pi pi-download"></em>
+                        </a>
+                    </td>
+                    <td style="text-align: center;">{{rowData.usuarioCreacion}}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="8" style="text-align:left">Sin registros encontrados</td>
+                </tr>
+            </ng-template>
+        </p-table>
+        </p-tabPanel>
+        </p-tabView>
+        </td>
+        </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="16" style="text-align:left">Sin registros encontrados</td>
+            </tr>
+        </ng-template>
+        </p-table> -->
     </p-fieldset>
 </div>
