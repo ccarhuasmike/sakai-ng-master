@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { SelectModule } from 'primeng/select';
@@ -30,8 +30,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Cuenta } from '@/layout/models/cuenta';
 import { FieldsetModule } from 'primeng/fieldset';
 import { CuentasDetailsService } from './cuentas-details.service';
-//import { DropdownModule } from 'primeng/dropdown';
+import { TooltipModule } from 'primeng/tooltip';
+import { DialogService, DynamicDialogRef, DynamicDialogModule } from 'primeng/dynamicdialog';
 
+//import { DropdownModule } from 'primeng/dropdown';
+import { MenuModule } from 'primeng/menu';
+import { RegistrarBloqueoCuentaComponent } from '../cuentas-modals/registrar-bloqueo-cuenta/registrar-bloqueo-cuenta.component';
+import { RegistrarBloqueoTarjetaComponent } from '../cuentas-modals/registrar-bloqueo-tarjeta/registrar-bloqueo-tarjeta.component';
 interface expandedRows {
     [key: string]: boolean;
 }
@@ -42,6 +47,7 @@ interface expandedRows {
     templateUrl: './cuentas-details.component.html',
     styleUrls: ['./cuentas-details.component.scss'],
     imports: [
+        DynamicDialogModule,
         TableModule,
         MultiSelectModule,
         SelectModule,
@@ -60,9 +66,11 @@ interface expandedRows {
         RatingModule,
         RippleModule,
         IconFieldModule,
-        FieldsetModule
+        FieldsetModule,
+        MenuModule,
+        TooltipModule
     ],
-    providers: [ConfirmationService, MessageService, CustomerService, ProductService, DatetzPipe]
+    providers: [DialogService, ConfirmationService, MessageService, CustomerService, ProductService, DatetzPipe]
 })
 export class CuentasDetailsComponent implements OnInit {
     bin: string = '';
@@ -146,6 +154,7 @@ export class CuentasDetailsComponent implements OnInit {
         private securityEncryptedService: SecurityEncryptedService,
         private fb: FormBuilder,
         private activatedRoute: ActivatedRoute,
+        private dialog: DialogService
     ) {
         this.activatedRoute.params.subscribe((params: any) => {
             this.uidCuenta = params.cuenta ? this.securityEncryptedService.decrypt(params.cuenta) : this.uidCuenta;
@@ -173,11 +182,316 @@ export class CuentasDetailsComponent implements OnInit {
     }
     loadPage() {
         this.getCuenta();
-        // this.getCliente();
+        this.getCliente();
         // this.getClientePuc();
-        // this.getCuentaTarjetas();
+        this.getCuentaTarjetas();
         this.getCuentaRetenciones();
         // this.getCuentaBloqueos();
+    }
+    getCuentaTarjetas() {
+        this.datosTarjetas = [];
+        this.loadingTarjetas = true;
+        const clienteUid = this.uidCliente;
+        const cuentaUid = this.uidCuenta;
+        var resp = {
+            "codigo": 0,
+            "mensaje": "OK",
+            "data": {
+                "content": [
+                    {
+                        "idTarjeta": 47933,
+                        "idCuenta": 62370,
+                        "token": "2405299000049572",
+                        "ultimosDigitos": "7279",
+                        "bin": 457339,
+                        "tipoTarjeta": "VIRTUAL",
+                        "codigoEstado": "01",
+                        "descripcionEstado": "ACTIVA",
+                        "codigoMotivoEstado": "00",
+                        "descripcionMotivoEstado": "ACTIVA",
+                        "anteriorCodMotivoBloqueo": null,
+                        "descripcionAnteriorMotivoBloqueo": "",
+                        "fechaAlta": "2024-05-31T20:25:35",
+                        "fechaBaja": "2024-08-08T19:46:31",
+                        "enmascarado": "457339******7279"
+                    },
+                    {
+                        "idTarjeta": 47934,
+                        "idCuenta": 62370,
+                        "token": "2206159000000036",
+                        "ultimosDigitos": "0351",
+                        "bin": 457339,
+                        "tipoTarjeta": "FISICA",
+                        "codigoEstado": "01",
+                        "descripcionEstado": "ACTIVA",
+                        "codigoMotivoEstado": "00",
+                        "descripcionMotivoEstado": "ACTIVA",
+                        "anteriorCodMotivoBloqueo": null,
+                        "descripcionAnteriorMotivoBloqueo": "",
+                        "fechaAlta": "2024-05-31T20:31:27",
+                        "fechaBaja": "2025-03-20T13:34:20",
+                        "enmascarado": "457339******0351"
+                    }
+                ]
+            }
+        }
+        this.loadingTarjetas = false;
+        console.log('getTarjetas()...', resp);
+        if (resp['codigo'] == 0) {
+            this.datosTarjetas = resp['data'].content;
+            this.datosTarjetas = this.datosTarjetas.map((item: any) => {
+                return {
+                    ...item,
+                    numTarjetaVisible: false
+                }
+            })
+        } else if (resp['codigo'] == -1) {
+            this.toastr.add({ severity: 'error', summary: 'Error getTarjetas', detail: resp['mensaje'] });
+        }
+        // this.cuentasDetailsService.getTarjetas(clienteUid, cuentaUid)
+        //     .subscribe((resp: any) => {
+        //         this.loadingTarjetas = false;
+
+        //         console.log('getTarjetas()...', resp);
+
+        //         if (resp['codigo'] == 0) {
+        //             this.datosTarjetas = resp['data'].content;
+        //             this.datosTarjetas = this.datosTarjetas.map((item: any) => {
+        //                 return {
+        //                     ...item,
+        //                     numTarjetaVisible: false
+        //                 }
+        //             })
+        //         } else if (resp['codigo'] == -1) {
+        //             this.toastr.add({ severity: 'error', summary: 'Error getTarjetas', detail: resp['mensaje'] });
+        //         }
+        //     }, (_error) => {
+        //         this.loadingTarjetas = false;
+        //         this.toastr.add({ severity: 'error', summary: 'Error getTarjetas', detail: 'Error en el servicio de obtener datos de las tarjetas' });
+        //     });
+    }
+
+    getTarjetaBloqueos(event: any) {
+        this.datosTarjetaBloqueos = [];
+        this.loadingTarjetaBloqueos = true;
+        const idTarjeta = event.data.idTarjeta;
+        const clienteUid = this.uidCliente;
+        const cuentaUid = this.uidCuenta;
+        const token = event.data.token;
+        // this.cuentasDetailsService.getTarjetaBloqueos(idTarjeta, clienteUid, cuentaUid, token)
+        //     .subscribe((resp: any) => {
+        //         this.loadingTarjetaBloqueos = false;
+        //         console.log('getTarjetaBloqueos()...', resp);
+
+        //         if (resp['codigo'] == 0) {
+        //             this.datosTarjetaBloqueos = resp['data'].sort((a, b) => new Date(b.fechaBloqueo).getTime() - new Date(a.fechaBloqueo).getTime());
+        //         } else if (resp['codigo'] == -1) {
+        //             this.toastr.add({ severity: 'error', summary: 'Error getTarjetaBloqueos', detail: resp['mensaje'] });
+        //             //this.toastr.error(resp['mensaje'], 'Error getTarjetaBloqueos');
+        //         }
+        //     }, (_error) => {
+        //         this.loadingTarjetaBloqueos = false;
+        //         this.toastr.add({ severity: 'error', summary: 'Error getTarjetaBloqueos', detail: 'Error en el servicio de obtener bloqueos tarjeta' });
+        //     });
+    }
+
+
+    getCliente() {
+        const tipoDocumento = this.tipoDoc;
+        const numeroDocumento = this.numDoc;
+        var resp = {
+            "codigo": 0,
+            "mensaje": "OK",
+            "data": {
+                "idCliente": 62372,
+                "uIdCliente": "23ac807b-afd9-4782-a12b-d57f42b826d6",
+                "numDocIdentidad": "90551060",
+                "codTipoDocIdentidad": "01",
+                "desCodTipoDoc": "DNI",
+                "nombresApellidos": "Liliana Andrea Fonseca De Las Casas",
+                "estado": "ACTIVO",
+                "fechaIngreso": "2024-05-31T20:25:33",
+                "fechaActualizacion": "2024-05-31T20:25:33"
+            }
+        };
+
+        if (resp['codigo'] == 0) {
+            let desCodTipoDoc = resp['data'].desCodTipoDoc;
+            let numDocIdentidad = resp['data'].numDocIdentidad;
+            if (desCodTipoDoc == 'DNI' && numDocIdentidad.length < 8) {
+                const limit = 8 - numDocIdentidad.length;
+                for (let index = 0; index < limit; index++) {
+                    numDocIdentidad = '0' + numDocIdentidad;
+                }
+            }
+            this.datosCliente.desCodTipoDoc = desCodTipoDoc;
+            this.datosCliente.numDocIdentidad = numDocIdentidad;
+            this.datosCliente.nombresApellidos = resp['data'].nombresApellidos;
+        } else if (resp['codigo'] == -1) {
+            this.toastr.add({ severity: 'error', summary: 'Error getCliente', detail: resp['mensaje'] });
+        }
+
+        // this.commonService.getCliente(tipoDocumento, numeroDocumento)
+        //     .subscribe(
+        //         (resp: any) => {
+        //             console.log('getCliente()...', resp);
+        //             if (resp['codigo'] == 0) {
+        //                 let desCodTipoDoc = resp['data'].desCodTipoDoc;
+        //                 let numDocIdentidad = resp['data'].numDocIdentidad;
+        //                 if (desCodTipoDoc == 'DNI' && numDocIdentidad.length < 8) {
+        //                     const limit = 8 - numDocIdentidad.length;
+        //                     for (let index = 0; index < limit; index++) {
+        //                         numDocIdentidad = '0' + numDocIdentidad;
+        //                     }
+        //                 }
+        //                 this.datosCliente.desCodTipoDoc = desCodTipoDoc;
+        //                 this.datosCliente.numDocIdentidad = numDocIdentidad;
+        //                 this.datosCliente.nombresApellidos = resp['data'].nombresApellidos;
+        //             } else if (resp['codigo'] == -1) {
+        //                 this.toastr.add({ severity: 'error', summary: 'Error getCliente', detail: resp['mensaje'] });
+        //             }
+        //         }, (_error) => {
+        //             this.toastr.add({ severity: 'error', summary: 'Error getCliente', detail: 'Error en el servicio de obtener datos del cliente' });
+        //         }
+        //     );
+    }
+
+    openDialogRegistrarBloqueoCuenta(tipo: any): void {
+        //SMCCB
+        // if (tipo == 'cancelacion' && !this.showCancelButton) {
+        //   this.toastr.warning('No se puede realizar la cancelación ya que la cuenta registra saldos mayores a 0.00');
+        //   return;
+        // }
+
+        const dialogRef = this.dialog.open(RegistrarBloqueoCuentaComponent, {
+            width: '1000px',
+            data: {
+                uidCuenta: this.uidCuenta,
+                uidCliente: this.uidCliente,
+                datosCuenta: this.datosCuenta,
+                datosCliente: this.datosCliente,
+                tipo: tipo,
+                showCancelButton: this.showCancelButton
+            }
+        });
+
+        // dialogRef.afterClosed().subscribe((resp:any) => {
+        //     if (resp !== undefined) {
+        //         if (resp.data['codigo'] == 0) {
+        //             this.getCuenta();
+        //             this.getCuentaBloqueos();
+        //             this.toastr.success('Bloqueo de cuenta registrado');
+        //         } else {
+        //             this.toastr.error('Error en el servicio de registrar bloqueo de cuenta', 'Error openDialogRegistrarBloqueoCuenta');
+        //         }
+        //     }
+        // });
+    }
+
+    descargarTemplateConstanciaBloqueoTarjetaPdf(rowData: any) {
+
+        const date = new Date(rowData.fechaBloqueo);
+        date.setHours(date.getHours() - 5);
+
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = String(date.getFullYear());
+
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+
+        const ampm = Number(hours) >= 12 ? 'PM' : 'AM';
+        const formattedHours = Number(hours) % 12 || 12;
+
+        const fechaBloqueo = `${day}/${month}/${year} ${formattedHours}:${minutes} ${ampm}`;
+
+        const data = {
+            fechaBloqueo: fechaBloqueo,
+            origen: rowData.usuarioCreacion,
+            idExternoBloqueo: rowData.idExterno,
+            motivoBloqueo: rowData.descMotivoBloqueo,
+            numeroTarjeta: rowData.tarjeta,
+            tipoDocumento: this.datosCliente.desCodTipoDoc,
+            numeroDocumento: this.datosCliente.numDocIdentidad,
+            nombreCliente: this.datosCliente.nombres,
+            apellidoCliente: this.datosCliente.apellidos,
+            producto: this.datosCuenta.producto
+        }
+
+        this.cuentasDetailsService.templateConstanciaBloqueoTarjetaPdf(this.replaceNullUndefinedWithEmpty(data));
+    }
+
+
+    menuItems: any[] = [];
+    onButtonClick(event: Event, rowData: any, menu: any) {
+        this.menuItems = this.getMenuItems(rowData);
+        menu.toggle(event);
+    }
+    // ✅ Este método devuelve el menú según la fila + rol
+    getMenuItems(rowData: any, menu?: any): MenuItem[] {
+        const items: MenuItem[] = [];
+        const role = this.securityEncryptedService.getRolesDecrypted();
+        // Mostrar solo si el rol lo permite
+        if (![this.roles.OPERACION_CONTABLE, this.roles.PLAFT, this.roles.CONSULTA].includes(role)) {
+            items.push({
+                label: 'Bloqueo/Desbloqueo Tarjeta',
+                icon: 'pi pi-ban',
+                disabled: this.disableActions,
+                command: () => {
+                    setTimeout(() => {
+                        this.openDialogRegistrarBloqueoTarjeta(rowData)
+                        menu?.hide();  // cerrar directamente
+                    }, 5);
+                }
+            });
+        }
+        items.push({
+            label: 'Botones',
+            icon: 'pi pi-cog',
+            command: () => this.openDialogDetalleBotonera(rowData)
+        });
+
+        return items;
+    }
+    dialogRef: DynamicDialogRef | undefined;
+    openDialogRegistrarBloqueoTarjeta(tarjeta: any) {
+        debugger;
+        this.dialogRef = this.dialog.open(RegistrarBloqueoTarjetaComponent, {
+            header: 'Registrar bloqueo de Tarjeta',
+            width: '40vw',
+            modal: true,
+            styleClass: 'header-modal',
+            dismissableMask: true,  // permite cerrar al hacer click fuera
+            breakpoints: {
+                '960px': '75vw',
+                '640px': '90vw'
+            },
+            data: {
+                uidCuenta: this.uidCuenta,
+                uidCliente: this.uidCliente,
+                tarjeta: tarjeta
+            }
+        });
+        this.dialogRef.onClose.subscribe((result) => {
+            //     if (resp !== undefined) {
+            //         if (resp.data['codigo'] == 0) {
+            //             this.getCuentaTarjetas();
+            //             this.toastr.success('Bloqueo de tarjeta registrada');
+            //         } else {
+            //             this.toastr.error('Error en el servicio de registrar bloqueo de tarjeta', 'Error openDialogRegistrarBloqueoTarjeta');
+            //         }
+            //     }
+        });
+    }
+    openDialogDetalleBotonera(rowData: any) {
+        // this.dialog.open(DetalleBotoneraComponent, {
+        //     width: '750px',
+        //     data: {
+        //         uidCliente: this.uidCliente,
+        //         uidCuenta: this.uidCuenta,
+        //         tarjeta: tarjeta
+        //     }
+        // });
     }
     getCuentaRetenciones() {
         this.datosRetenciones = [];
@@ -346,7 +660,7 @@ export class CuentasDetailsComponent implements OnInit {
         }
     }
     getCuenta() {
-        debugger;
+
         this.loadingSaldos = true;
         this.disableActions = false;
         const clienteUid = this.uidCliente;
@@ -506,7 +820,7 @@ export class CuentasDetailsComponent implements OnInit {
             }
             // this.getSaldosMes();
             this.getCuentaMovimientos();
-            // this.getInteresTarifarios();
+            this.getInteresTarifarios();
             this.getDatosSaldos(datosCuenta);
         } else if (resp['codigo'] == -1) {
             this.saldoAutorizado = [];
@@ -589,6 +903,41 @@ export class CuentasDetailsComponent implements OnInit {
         //         this.toastr.add({ severity: 'error', summary: 'Error getCuenta', detail: 'Error en el servicio de obtener datos de la cuenta' });
 
         //     });
+    }
+    getInteresTarifarios() {
+        this.datosInteresTarifario = null;
+        var resp = {
+            "codigo": 0,
+            "mensaje": "OK",
+            "data": {
+                "tasaEquivalenteAnual": 1.0,
+                "codigoGrupoCuenta": "A01"
+            }
+        }
+        this.loadingPagoRetencion = false;
+        if (resp['codigo'] == 0) {
+            this.datosInteresTarifario = resp['data'];
+        } else if (resp['codigo'] == -1) {
+            this.datosInteresTarifario = {
+                ...resp['data'],
+                tasaEquivalenteAnual: 0
+            };
+        }
+        // this.cuentasDetailsService.getInteresTarifario({
+        //     accountUid: this.uidCuenta
+        // }).subscribe((resp) => {
+        //     this.loadingPagoRetencion = false;
+        //     if (resp['codigo'] == 0) {
+        //         this.datosInteresTarifario = resp['data'];
+        //     } else if (resp['codigo'] == -1) {
+        //         this.datosInteresTarifario = {
+        //             ...resp['data'],
+        //             tasaEquivalenteAnual: 0
+        //         };
+        //     }
+        // }, (_error) => {
+        //     this.toastr.add({ severity: 'error', summary: 'Error getInteresTarifarios', detail: 'Error en el servicio de obtener tarifario' });            
+        // });
     }
     getDatosSaldos(datosCuenta: any) {
 

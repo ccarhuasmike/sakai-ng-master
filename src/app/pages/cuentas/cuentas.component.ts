@@ -278,7 +278,7 @@ export class CuentasComponent implements OnInit {
         });
     }
     changeModelTipoDocumento(event: any) {
-        debugger;
+        
 
         if (event.value == 1) {
             this.nroCaracter = 8;
@@ -305,7 +305,7 @@ export class CuentasComponent implements OnInit {
     ngOnInit() {
         this.getCombos();
         this.createForm();
-        debugger;
+        
         //this.toastr.add({ severity: 'info', summary: 'Info Message', detail: 'PrimeNG rocks' });
         this.search();
         //this.service.add({ severity: 'info', summary: 'Info Message', detail: 'PrimeNG rocks' });
@@ -358,7 +358,7 @@ export class CuentasComponent implements OnInit {
         dt.clear();
     }
    goToAccount(data: any) {
-        debugger;
+        
         const uidCuenta = this.securityEncryptedService.encrypt(data.uIdCuenta);
         const uidCliente = this.securityEncryptedService.encrypt(this.uidCliente);
 
@@ -422,7 +422,7 @@ export class CuentasComponent implements OnInit {
     }
     getCuenta() {
         if (this.resp['codigo'] == 0) {
-            debugger;
+            
             this.datosCuentas = this.resp['data'].content;
             let desCodTipoDoc = this.datosCliente.desCodTipoDoc;
             let numDocIdentidad = this.datosCliente.numDocIdentidad;
