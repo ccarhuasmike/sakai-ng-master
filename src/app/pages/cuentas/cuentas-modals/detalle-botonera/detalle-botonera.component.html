@@ -1,0 +1,135 @@
+<p-toast></p-toast>
+<br>
+<div class="grid grid-flow-row-dense sm:grid-cols-1 md:grid-cols-1 gap-4">
+    <div class="md:col-span-1">
+        <p-tabs value="0">
+            <p-tablist>
+                <p-tab value="0" *appDisableContentByRole="[roles.PLAFT, roles.CONSULTA]">Estado actual</p-tab>
+                <p-tab value="1">Historial de cambios</p-tab>
+            </p-tablist>
+            <p-tabpanels>
+                <p-tabpanel value="0">
+                    <p class="m-0">
+                        <p-table [value]="rowsEstadoActual"  [resizableColumns]="true" 
+                            [tableStyle]="{ 'min-width': '100% !important','max-width': '100% !important' }">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="text-align: left;" scope="col">Tarjeta: {{tarjeta?.enmascarado}}</th>
+                                    <th style="text-align: center;" scope="col">CLIENTE</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData>
+                                <tr>
+                                    <td>
+                                        <span class="pi " [ngClass]="rowData.icon"></span>&nbsp;&nbsp;{{rowData.field}}
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <p-toggleswitch [(ngModel)]="rowData.cliente" [disabled]="true">
+                                            <ng-template #handle let-checked="checked">
+                                                <i
+                                                    [ngClass]="['!text-xs', 'pi', checked ? 'pi-check' : 'pi-times']"></i>
+                                            </ng-template>
+                                        </p-toggleswitch>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </p>
+                </p-tabpanel>
+                <p-tabpanel value="1">
+                    <p class="m-0">
+                        <!-- <p-table [value]="rowsHistorial" class="mi-tabla-personalizada">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="text-align: center;" scope="col">Fecha registro: {{row.fechaRegistro | date:'dd/MM/yyyy HH:mm:ss'}}</th>
+                                    <th style="text-align: center;" scope="col">CLIENTE</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData>
+                                <tr>
+                                   <td>
+                                        <span class="pi " [ngClass]="rowData.icon"></span>&nbsp;&nbsp;{{rowData.field}}
+                                    </td>
+                                   <td style="text-align: center;">
+                                        <p-toggleswitch [(ngModel)]="rowData.cliente" [disabled]="true">
+                                            <ng-template #handle let-checked="checked">
+                                                <i
+                                                    [ngClass]="['!text-xs', 'pi', checked ? 'pi-check' : 'pi-times']"></i>
+                                            </ng-template>
+                                        </p-toggleswitch>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table> -->
+                    </p>
+                </p-tabpanel>
+            </p-tabpanels>
+        </p-tabs>
+    </div>
+</div>
+
+
+<!-- <div mat-dialog-content class="dialog-content-wrapper"
+    style="max-height: 85vh;display: flex;flex-direction: column;padding: 0 !important;margin-top: -24px !important;margin-bottom: -24px !important;">
+    
+
+    <div mat-dialog-content class="p-24 pb-24 m-0" fusePerfectScrollbar>
+        <mat-tab-group>
+            <mat-tab label="Estado actual" *appDisableContentByRole="[roles.PLAFT, roles.CONSULTA]">
+                <br>
+                <table>
+                    <tr>
+                        <th style="width: 40%;" align="left">Tarjeta: {{tarjeta?.enmascarado}}</th>
+                        <th style="width: 20%;" align="center">CLIENTE</th>
+                    </tr>
+                    <tr *ngFor="let row of rowsEstadoActual">
+                        <td>
+                             <mat-icon>{{row.icon}}</mat-icon> {{row.field}} 
+                        </td>
+                        <td align="center">
+                            <label class="switch">
+                                <input type="checkbox" [checked]="row.cliente" [disabled]="true">
+                                <span class="slider round"></span>
+                            </label>
+                        </td>
+                    </tr>
+                </table>
+            </mat-tab>
+            <mat-tab label="Historial de cambios">
+                <br>
+
+                <div class="p-grid p-fluid p-align-center">
+                    <div class="p-col-6">
+                        Número de tarjeta: <strong>{{tarjeta?.enmascarado}}</strong>
+                    </div>
+                </div>
+
+                <br>
+
+                <table style="margin-bottom: 15px;" *ngFor="let row of rowsHistorial;">
+                    <tr>
+                        <th style="width: 40%;" align="left">Fecha registro: {{row.fechaRegistro | date:'dd/MM/yyyy HH:mm:ss'}}</th>
+                        <th style="width: 20%;" align="center">CLIENTE</th>
+                    </tr>
+                    <tr *ngFor="let subrow of row.rowsEstadoActual">
+                        <td>
+                            <mat-icon>{{subrow.icon}}</mat-icon> {{subrow.field}}
+                        </td>
+                        <td align="center">
+                            <label class="switch">
+                                <input type="checkbox" [checked]="subrow.cliente" [disabled]="true">
+                                <span class="slider round"></span>
+                            </label>
+                        </td>
+                    </tr>
+                </table>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+
+    <div mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="end center">
+        <button mat-raised-button color="warn" mat-dialog-close>
+            Cerrar
+        </button>
+    </div>
+</div> -->

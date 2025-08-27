@@ -22,6 +22,7 @@ export class SecurityEncryptedService {
 
     getRolesDecrypted() {
         try {
+            debugger;
             const value = localStorage.getItem('rolesABA');
 
             if (!value) return null;

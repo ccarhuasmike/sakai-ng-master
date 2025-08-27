@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, Inject } from '@angular/core';
 // import { fuseAnimations } from '@fuse/animations';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 // import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { finalize } from 'rxjs/operators';
 // import { CommonService } from 'app/main/services/shared/common.service';
@@ -13,15 +13,22 @@ import { CommonService } from '@/pages/service/commonService';
 import { SecurityEncryptedService } from '@/layout/service/SecurityEncryptedService';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { UpperCasePipe } from '@angular/common';
 import { FileUploadModule } from 'primeng/fileupload';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { MessageModule } from 'primeng/message';
+import { ToastModule } from 'primeng/toast';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { CommonModule } from '@angular/common';
+
 @Component({
     selector: 'app-registrar-bloqueo-cuenta',
     templateUrl: './registrar-bloqueo-cuenta.component.html',
     styleUrls: ['./registrar-bloqueo-cuenta.component.scss'],
     standalone: true,
-    imports: [FileUploadModule],
+        imports: [MessageModule,ToastModule,ButtonModule, FileUploadModule, ReactiveFormsModule, CommonModule, InputTextModule, AutoCompleteModule],
     //animations: fuseAnimations,
+    providers: [MessageService],
     encapsulation: ViewEncapsulation.None
 })
 export class RegistrarBloqueoCuentaComponent implements OnInit {
@@ -51,6 +58,7 @@ export class RegistrarBloqueoCuentaComponent implements OnInit {
         private commonService: CommonService,
         private securityEncryptedService: SecurityEncryptedService,
         private toastr: MessageService,
+         private fb: FormBuilder,
         private registrarBloqueoCuentaService: RegistrarBloqueoCuentaService,
         // public dialogRef: MatDialogRef<RegistrarBloqueoCuentaComponent>,
         // @Inject(MAT_DIALOG_DATA) public data: any
@@ -66,7 +74,7 @@ export class RegistrarBloqueoCuentaComponent implements OnInit {
         //SMCCB
         this.showCancelButton = config.data.showCancelButton;
 
-        this.formBloqueo = new FormGroup({
+        this.formBloqueo = this.fb.group({
             tipoBloqueo: new FormControl(null, [Validators.required]),
             estadoBloqueo: new FormControl(null, [Validators.required]),
             descripcion: new FormControl(null, [Validators.maxLength(255)]),

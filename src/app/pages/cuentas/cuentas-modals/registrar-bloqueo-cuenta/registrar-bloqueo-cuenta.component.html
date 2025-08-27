@@ -1,114 +1,114 @@
-<!-- <div mat-dialog-content class="dialog-content-wrapper"
-    style="max-height: 85vh;display: flex;flex-direction: column;padding: 0 !important;margin-top: -24px !important;margin-bottom: -24px !important;">
-    <mat-toolbar matDialogTitle class="mat-accent m-0" style="min-height: initial;">
-        <mat-toolbar-row fxLayout="row" fxLayoutAlign="center center" style="display: unset;">
-            <div style="text-align: center;" [ngSwitch]="tipo">
-                <span class="title dialog-title" *ngSwitchCase="'bloqueo'">Bloqueo de cuenta</span>
-                <span class="title dialog-title" *ngSwitchCase="'cancelacion'">Cancelación de cuenta</span>
-                <span class="title dialog-title" *ngSwitchDefault>Desbloqueo de cuenta</span>
-            </div>
-        </mat-toolbar-row>
-    </mat-toolbar>
-
-    <div mat-dialog-content class="p-24 pb-24 m-0" fusePerfectScrollbar>
-        <div class="p-grid p-fluid p-align-center">
-            <div class="p-col-6">
-                Tipo documento: <strong>{{datosCliente.desCodTipoDoc}}</strong>
-            </div>
-            <div class="p-col-6">
-                Número documento: <strong>{{datosCliente.numDocIdentidad}}</strong>
-            </div>
-            <div class="p-col-6">
-                Nombre del cliente: <strong>{{datosCliente?.nombresApellidos}}</strong>
-            </div>
-            <div class="p-col-6">
-                Bloqueo actual: <strong>{{datosCuenta?.motivoBloqueo}}</strong>
-            </div>
-        </div>
+<p-toast></p-toast>
+<br>
+<div class="grid grid-flow-row-dense sm:grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="md:col-span-1">
+        Tipo documento: <strong>{{datosCliente.desCodTipoDoc}}</strong>
+    </div>
+    <div class="md:col-span-1">
+        Número documento: <strong>{{datosCliente.numDocIdentidad}}</strong>
+    </div>
+    <div class="md:col-span-1">
+        Nombre del cliente: <strong>{{datosCliente?.nombresApellidos}}</strong>
+    </div>
+    <div class="md:col-span-1">
+        Bloqueo actual: <strong>{{datosCuenta?.motivoBloqueo}}</strong>
+    </div>
+    <div class="md:col-span-2">
         <form [formGroup]="formBloqueo" novalidate>
-            <div class="p-grid p-fluid">
-                <div class="p-col-12" *ngIf="tipo != 'desbloqueo'">
-                    <label>Tipo bloqueo</label>
-                    <p-autoComplete name="tipoBloqueo" formControlName="tipoBloqueo"
+            <div class="grid grid-flow-row-dense sm:grid-cols-1 md:grid-cols-1 gap-4">
+                <div class="md:col-span-1" *ngIf="tipo != 'desbloqueo'">
+                    <label class="block mb-1 text-sm">Tipo bloqueo</label>
+                    <p-autoComplete class="w-full" name="tipoBloqueo" formControlName="tipoBloqueo"
                         [suggestions]="filteredElementMotivo"
                         (completeMethod)="filterElementMotivo($event, opcionesMotivoBloqueoCuenta)"
-                        (onSelect)="onElementSelect($event)" field="descripcion" emptyMessage='Sin resultados'
+                        (onSelect)="onElementSelect($event)" optionLabel="descripcion" emptyMessage='Sin resultados'
                         [dropdown]="true" appendTo="body">
                         <ng-template let-element>
                             <div>{{element.descripcion}}</div>
                         </ng-template>
                     </p-autoComplete>
-                    <mat-error
-                        [ngStyle]="{'display': formBloqueo.get('tipoBloqueo').dirty && !formBloqueo.get('tipoBloqueo').valid ? 'block' : 'none' }">
+
+                    <!-- <p-autoComplete class="w-full" name="tipoBloqueo" formControlName="tipoBloqueo"
+                        [suggestions]="filteredElement" (completeMethod)="filterElement($event, motivosBloqueoTarjeta)"
+                        optionLabel="descripcion" emptyMessage='Sin resultados' [dropdown]="true" appendTo="body">
+                        <ng-template let-element>
+                            <div>{{element.descripcion}}</div>
+                        </ng-template>
+                    </p-autoComplete> -->
+                    <p-message *ngIf="formBloqueo.get('tipoBloqueo')?.invalid && formBloqueo.get('tipoBloqueo')?.dirty"
+                        severity="error" variant="simple" size="small">
                         No es una opción
-                    </mat-error>
+                    </p-message>
                 </div>
-                <div class="p-col-12" *ngIf="tipo != 'desbloqueo' && opcionesEstadoBloqueoCuenta.length > 0">
-                    <label>Estado</label>
-                    <p-autoComplete name="estadoBloqueo" formControlName="estadoBloqueo"
+                <div class="md:col-span-1" *ngIf="tipo != 'desbloqueo' && opcionesEstadoBloqueoCuenta.length > 0">
+                    <label class="block mb-1 text-sm">Estado</label>
+                    <p-autoComplete class="w-full" name="estadoBloqueo" formControlName="estadoBloqueo"
                         [suggestions]="filteredElementEstado"
-                        (completeMethod)="filterElementEstado($event, opcionesEstadoBloqueoCuenta)" field="descripcion"
-                        emptyMessage='Sin resultados' [dropdown]="true" appendTo="body"
+                        (completeMethod)="filterElementEstado($event, opcionesEstadoBloqueoCuenta)"
+                        optionLabel="descripcion" emptyMessage='Sin resultados' [dropdown]="true" appendTo="body"
                         [disabled]="opcionesEstadoBloqueoCuenta.length == 1">
                         <ng-template let-element>
                             <div>{{element.descripcion}}</div>
                         </ng-template>
                     </p-autoComplete>
-                    <mat-error
-                        [ngStyle]="{'display': formBloqueo.get('estadoBloqueo').dirty && !formBloqueo.get('estadoBloqueo').valid ? 'block' : 'none' }">
+                    <p-message
+                        *ngIf="formBloqueo.get('estadoBloqueo')?.invalid && formBloqueo.get('estadoBloqueo')?.dirty"
+                        severity="error" variant="simple" size="small">
                         No es una opción
-                    </mat-error>
+                    </p-message>
                 </div>
-                <div class="p-col-12">
-                    <label>Descripción</label>
-                    <input type="text" autocomplete="off" #valorDescripcion pInputText name="descripcion"
-                        formControlName="descripcion" [attr.maxlength]="255">
-                    <br>
-                    <div fxLayout="row" fxLayoutAlign="end center">
-                        <mat-hint align="end" style="position: absolute;padding-top: 14px;">
-                            {{valorDescripcion.value.length}} / {{255}}</mat-hint>
+                <div class="md:col-span-1">
+                    <label class="block mb-1 text-sm">Descripción</label>
+                    <div class="p-fluid">
+                        <input class="w-full" #valorDescripcion pInputText type="text" [attr.maxlength]="255"
+                            autocomplete="off" formControlName="descripcion"
+                            [ngClass]="{'ng-invalid': formBloqueo.get('descripcion')?.invalid && formBloqueo.get('descripcion')?.dirty}" />
+                        <div class="flex justify-end text-sm text-gray-500 mt-1">
+                            {{ valorDescripcion.value.length || 0 }} / 255
+                        </div>
+                        <p-message
+                            *ngIf="formBloqueo.get('descripcion')?.invalid && formBloqueo.get('descripcion')?.dirty"
+                            severity="error" variant="simple" size="small">
+                            Máximo 255 caracteres
+                        </p-message>
                     </div>
-                    <mat-error
-                        [ngStyle]="{'display': formBloqueo.get('descripcion').dirty && !formBloqueo.get('descripcion').valid ? 'block' : 'none' }">
-                        Máximo 255 caracteres
-                    </mat-error>
                 </div>
-                <div class="p-col-12">
-                    <label>Nombre archivo sustento (pdf, jpeg, png, xlsx)</label>
-                    <input type="text" autocomplete="off" pInputText name="nombreArchivo"
-                        formControlName="nombreArchivo" readonly>
-                    <mat-error
-                        [ngStyle]="{'display': formBloqueo.get('nombreArchivo').dirty && !formBloqueo.get('nombreArchivo').valid ? 'block' : 'none' }">
-                        Es requerido
-                    </mat-error>
+                <div class="md:col-span-1">
+                    <label class="block mb-1 text-sm">Nombre archivo sustento (pdf, jpeg, png, xlsx)</label>
+                    <div class="p-fluid">
+                        <input class="w-full" #valorDescripcion pInputText type="text" readonly
+                            formControlName="nombreArchivo" autocomplete="off"
+                            [ngClass]="{'ng-invalid': formBloqueo.get('nombreArchivo')?.invalid && formBloqueo.get('nombreArchivo')?.dirty}" />
+                        <p-message
+                            *ngIf="formBloqueo.get('nombreArchivo')?.invalid && formBloqueo.get('nombreArchivo')?.dirty"
+                            severity="error" variant="simple" size="small">
+                            Es requerido
+                        </p-message>
+                    </div>
                 </div>
             </div>
         </form>
+    </div>
+    <div class="md:col-span-2">
         <p-fileUpload name="files" [auto]="true" customUpload="true" accept=".pdf,.jpeg,.png,.xlsx"
             maxFileSize="3700000" invalidFileTypeMessageSummary="{0}: archivo inválido, "
             invalidFileTypeMessageDetail="extensiones permitidas: {0}." (uploadHandler)="uploader($event)"
             (onClear)="removeAll()" (onRemove)="removeElement($event)" uploadLabel="Cargar" cancelLabel="Cancelar"
             chooseLabel="Seleccionar archivo sustento">
         </p-fileUpload>
-
-        <div *ngIf="tipo != 'desbloqueo'">
-            <div *ngFor="let estado of estadosBloqueoCuenta; let i = index">
-                <div *ngIf="estado.motivosBloqueoCuenta.length > 0">
-                    <p style="margin-top: 10px; float: left; width: 100%;">
-                        <strong>{{i + 1}}. {{estado.descripcion | uppercase}}</strong>
-                    </p>
-                    <ul class="row-list" *ngFor="let motivo of estado.motivosBloqueoCuenta">
-                        <li class="column-description">{{motivo.descripcion}}</li>
-                    </ul>
-                </div>
-            </div>
+    </div>
+    <div class="md:col-span-2" *ngIf="tipo != 'desbloqueo'">
+        <div *ngFor="let estado of estadosBloqueoCuenta; let i = index">
+            <p style="margin-top: 10px; float: left; width: 100%;">
+                <strong>{{i + 1}}. {{estado.descripcion | uppercase}}</strong>
+            </p>
+            <ul class="row-list" *ngFor="let motivo of estado.motivosBloqueoCuenta">
+                <li class="column-description">{{motivo.descripcion}} ({{motivo.codigoExterno}})</li>
+            </ul>
         </div>
     </div>
-
-    <div mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="end center">
-        <button mat-raised-button color="warn" [disabled]="formBloqueo.invalid || loadingFile || disableButton"
-            (click)="registrarBloqueo()">
-            Aceptar
-        </button>
+    <div class="md:col-span-2 flex items-end justify-end gap-2 footer-modal">
+        <p-button label="Aceptar" [disabled]="formBloqueo.invalid || loadingFile || disableButton"
+            (click)="registrarBloqueo()" />
     </div>
-</div> -->
+</div>

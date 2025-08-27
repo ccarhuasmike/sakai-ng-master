@@ -4,7 +4,6 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { finalize } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { RegistrarBloqueoTarjetaService } from './registrar-bloqueo-tarjeta.service';
-import { InputTextModule } from 'primeng/inputtext';
 import { MessageService } from 'primeng/api';
 import { ROLES } from '@/layout/Utils/constants/aba.constants';
 import { CommonService } from '@/pages/service/commonService';
@@ -14,6 +13,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
 @Component({
     selector: 'app-registrar-bloqueo-tarjeta',
     standalone: true,

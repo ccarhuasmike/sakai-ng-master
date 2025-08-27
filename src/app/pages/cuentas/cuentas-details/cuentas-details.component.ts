@@ -32,11 +32,14 @@ import { FieldsetModule } from 'primeng/fieldset';
 import { CuentasDetailsService } from './cuentas-details.service';
 import { TooltipModule } from 'primeng/tooltip';
 import { DialogService, DynamicDialogRef, DynamicDialogModule } from 'primeng/dynamicdialog';
-
-//import { DropdownModule } from 'primeng/dropdown';
+import { TabsModule } from 'primeng/tabs';
+import { Breadcrumb } from 'primeng/breadcrumb';
 import { MenuModule } from 'primeng/menu';
 import { RegistrarBloqueoCuentaComponent } from '../cuentas-modals/registrar-bloqueo-cuenta/registrar-bloqueo-cuenta.component';
 import { RegistrarBloqueoTarjetaComponent } from '../cuentas-modals/registrar-bloqueo-tarjeta/registrar-bloqueo-tarjeta.component';
+import { DetalleBotoneraComponent } from '../cuentas-modals/detalle-botonera/detalle-botonera.component';
+import { VerCuentaRelacionadaComponent } from '../cuentas-modals/ver-cuenta-relacionada/ver-cuenta-relacionada.component';
+import { SplitButton } from 'primeng/splitbutton';
 interface expandedRows {
     [key: string]: boolean;
 }
@@ -47,6 +50,8 @@ interface expandedRows {
     templateUrl: './cuentas-details.component.html',
     styleUrls: ['./cuentas-details.component.scss'],
     imports: [
+        SplitButton,
+        TabsModule,
         DynamicDialogModule,
         TableModule,
         MultiSelectModule,
@@ -68,11 +73,18 @@ interface expandedRows {
         IconFieldModule,
         FieldsetModule,
         MenuModule,
-        TooltipModule
+        TooltipModule,
+        Breadcrumb
     ],
     providers: [DialogService, ConfirmationService, MessageService, CustomerService, ProductService, DatetzPipe]
 })
 export class CuentasDetailsComponent implements OnInit {
+
+
+    items: MenuItem[] = [{ label: 'Components' }, { label: 'Form' }, { label: 'InputText', routerLink: '/inputtext' }];
+    home: MenuItem = { icon: 'pi pi-home', routerLink: '/' };
+
+
     bin: string = '';
     listaRed: any[] = [];
     listProductos: any[] = [];
@@ -126,7 +138,7 @@ export class CuentasDetailsComponent implements OnInit {
     datosCuentaBloqueos = [];
     loadingCuentaBloqueos!: boolean;
 
-    datosTarjetaBloqueos = [];
+    datosTarjetaBloqueos: any[] = [];
     loadingTarjetaBloqueos!: boolean;
 
     datosPagosPorBloqueo = [];
@@ -144,6 +156,49 @@ export class CuentasDetailsComponent implements OnInit {
 
     roles: any = ROLES;
 
+
+    itemsOpciones: MenuItem[] = [
+        {
+            label: 'Registrar retención',
+            icon: 'pi pi-undo',
+            command: () => this.openDialogRegistrarRetencion(),
+            //disabled: this.shouldDisableForRoles([roles.PLAFT, roles.FRAUDE, roles.ATENCION_CLIENTE, roles.ATENCION_CLIENTE_TD]) || this.disableActions
+        },
+        {
+            label: 'Bloqueo/Desbloqueo Cuenta',
+            icon: 'pi pi-lock',
+            command: () => this.openDialogRegistrarBloqueoCuenta('bloqueo'),
+            disabled: this.disableActions
+        },
+        {
+            label: 'Cancelación Cuenta',
+            icon: 'pi pi-ban',
+            command: () => this.openDialogRegistrarBloqueoCuenta('cancelacion'),
+            //disabled: this.shouldDisableForRoles([roles.PLAFT, roles.ATENCION_CLIENTE, roles.ATENCION_CLIENTE_TD]) || this.disableActions
+        },
+        {
+            label: 'Desbloqueo de Cuenta',
+            icon: 'pi pi-unlock',
+            command: () => this.openDialogRegistrarBloqueoCuenta('desbloqueo'),
+            //disabled: this.shouldDisableForRoles([roles.PLAFT, roles.ATENCION_CLIENTE, roles.ATENCION_CLIENTE_TD]) || !this.disableActions
+        },
+        {
+            label: 'Envío de EECC',
+            icon: 'pi pi-file',
+            command: () => this.openDialogEnvioEstadoCuenta(),
+            visible: this.bin === '41',
+            //disabled: this.shouldDisableForRoles([roles.PLAFT, roles.FRAUDE, roles.ATENCION_CLIENTE]) || this.disableActions
+        },
+        {
+            label: 'Ajustes Saldo',
+            icon: 'pi pi-cog',
+            command: () => this.openDialogCalcularCuentaAhorro(),
+            //disabled: this.shouldDisableForRoles([roles.PLAFT, roles.FRAUDE, roles.ATENCION_CLIENTE]) || this.disableActions
+        }
+
+
+
+    ];
     constructor(
         private cuentasDetailsService: CuentasDetailsService,
         private router: Router,
@@ -165,6 +220,16 @@ export class CuentasDetailsComponent implements OnInit {
         });
     }
 
+    openDialogCalcularCuentaAhorro(): void {
+        throw new Error('Method not implemented.');
+    }
+    openDialogEnvioEstadoCuenta(): void {
+        throw new Error('Method not implemented.');
+    }
+
+    openDialogRegistrarRetencion(): void {
+        throw new Error('Method not implemented.');
+    }
     limpiar() {
 
     }
@@ -175,10 +240,18 @@ export class CuentasDetailsComponent implements OnInit {
         this.loadPage();
     }
     listAccounts() {
-        // this.dialog.open(VerCuentaRelacionadaComponent, {
-        //   width: '1000px',
-        //   data: this.listProductos
-        // });
+        this.dialog.open(VerCuentaRelacionadaComponent, {
+            header: 'Cuentas Relacionadas',
+            width: '40vw',
+            modal: true,
+            styleClass: 'header-modal',
+            dismissableMask: true,  // permite cerrar al hacer click fuera
+            breakpoints: {
+                '960px': '75vw',
+                '640px': '90vw'
+            },
+            data: this.listProductos
+        });
     }
     loadPage() {
         this.getCuenta();
@@ -278,6 +351,78 @@ export class CuentasDetailsComponent implements OnInit {
         const clienteUid = this.uidCliente;
         const cuentaUid = this.uidCuenta;
         const token = event.data.token;
+        var resp = {
+            "codigo": 0,
+            "mensaje": "OK",
+            "data": [
+                {
+                    "idBloqueo": null,
+                    "idExterno": null,
+                    "uidTarjeta": 47934,
+                    "uidCliente": "23ac807b-afd9-4782-a12b-d57f42b826d6",
+                    "uidCuenta": "8e37cb30-9dd0-4ffe-b1e2-ae9b5ca1101d",
+                    "fechaBloqueo": "2025-03-20T13:34:20",
+                    "codEstado": "01",
+                    "estadoBloqueo": 1,
+                    "nombreSustento": null,
+                    "archivoSustento": null,
+                    "motivoBloqueo": null,
+                    "usuarioCreacion": "upforigin01",
+                    "descMotivoBloqueo": null,
+                    "descCodEstado": "ACTIVA",
+                    "descripcion": null,
+                    "fechaCreacion": null,
+                    "celular": null,
+                    "tipoDocumento": null,
+                    "numeroDocumento": null,
+                    "cliente": null,
+                    "tarjeta": null,
+                    "correo": null,
+                    "codEstadoAnterior": "04",
+                    "descEstadoAnterior": "BLOQUEO TEMPORAL APP",
+                    "codOrigen": "01",
+                    "desCodOrigen": "AgoraApp"
+                },
+                {
+                    "idBloqueo": null,
+                    "idExterno": null,
+                    "uidTarjeta": 47934,
+                    "uidCliente": "23ac807b-afd9-4782-a12b-d57f42b826d6",
+                    "uidCuenta": "8e37cb30-9dd0-4ffe-b1e2-ae9b5ca1101d",
+                    "fechaBloqueo": "2025-03-20T13:29:05",
+                    "codEstado": "04",
+                    "estadoBloqueo": 1,
+                    "nombreSustento": null,
+                    "archivoSustento": null,
+                    "motivoBloqueo": null,
+                    "usuarioCreacion": "upforigin01",
+                    "descMotivoBloqueo": null,
+                    "descCodEstado": "BLOQUEO TEMPORAL APP",
+                    "descripcion": null,
+                    "fechaCreacion": null,
+                    "celular": null,
+                    "tipoDocumento": null,
+                    "numeroDocumento": null,
+                    "cliente": null,
+                    "tarjeta": null,
+                    "correo": null,
+                    "codEstadoAnterior": "01",
+                    "descEstadoAnterior": "ACTIVA",
+                    "codOrigen": "01",
+                    "desCodOrigen": "AgoraApp"
+                }
+            ]
+        };
+        this.loadingTarjetaBloqueos = false;
+        console.log('getTarjetaBloqueos()...', resp);
+
+        if (resp['codigo'] == 0) {
+            this.datosTarjetaBloqueos = resp['data'].sort((a, b) => new Date(b.fechaBloqueo).getTime() - new Date(a.fechaBloqueo).getTime());
+        } else if (resp['codigo'] == -1) {
+            this.toastr.add({ severity: 'error', summary: 'Error getTarjetaBloqueos', detail: resp['mensaje'] });
+            //this.toastr.error(resp['mensaje'], 'Error getTarjetaBloqueos');
+        }
+
         // this.cuentasDetailsService.getTarjetaBloqueos(idTarjeta, clienteUid, cuentaUid, token)
         //     .subscribe((resp: any) => {
         //         this.loadingTarjetaBloqueos = false;
@@ -362,9 +507,28 @@ export class CuentasDetailsComponent implements OnInit {
         //   this.toastr.warning('No se puede realizar la cancelación ya que la cuenta registra saldos mayores a 0.00');
         //   return;
         // }
-
+        let header ="";
+        switch (tipo) {
+            case 'bloqueo':
+                header = 'Bloqueo de cuenta';
+                break;
+            case 'cancelacion':
+                header = 'Cancelación de cuenta';
+                break;
+            default:
+                header = 'Desbloqueo de cuenta';
+                break;
+        }
         const dialogRef = this.dialog.open(RegistrarBloqueoCuentaComponent, {
-            width: '1000px',
+            header: header,
+            width: '30vw',
+            modal: true,
+            styleClass: 'header-modal',
+            dismissableMask: true,  // permite cerrar al hacer click fuera
+            breakpoints: {
+                '960px': '75vw',
+                '640px': '90vw'
+            },
             data: {
                 uidCuenta: this.uidCuenta,
                 uidCliente: this.uidCliente,
@@ -483,15 +647,30 @@ export class CuentasDetailsComponent implements OnInit {
             //     }
         });
     }
-    openDialogDetalleBotonera(rowData: any) {
-        // this.dialog.open(DetalleBotoneraComponent, {
-        //     width: '750px',
-        //     data: {
-        //         uidCliente: this.uidCliente,
-        //         uidCuenta: this.uidCuenta,
-        //         tarjeta: tarjeta
-        //     }
-        // });
+    openDialogDetalleBotonera(tarjeta: any) {
+        this.dialog.open(DetalleBotoneraComponent, {
+            header: 'Estado de la Botonería',
+            width: '30vw',
+            modal: true,
+            styleClass: 'header-modal',
+            dismissableMask: true,  // permite cerrar al hacer click fuera
+            breakpoints: {
+                '960px': '75vw',
+                '640px': '90vw'
+            },
+            data: {
+                uidCuenta: this.uidCuenta,
+                uidCliente: this.uidCliente,
+                tarjeta: tarjeta
+            }
+
+            // width: '750px',
+            // data: {
+            //     uidCliente: this.uidCliente,
+            //     uidCuenta: this.uidCuenta,
+            //     tarjeta: tarjeta
+            // }
+        });
     }
     getCuentaRetenciones() {
         this.datosRetenciones = [];
