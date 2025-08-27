@@ -26,7 +26,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './registrar-bloqueo-cuenta.component.html',
     styleUrls: ['./registrar-bloqueo-cuenta.component.scss'],
     standalone: true,
-        imports: [MessageModule,ToastModule,ButtonModule, FileUploadModule, ReactiveFormsModule, CommonModule, InputTextModule, AutoCompleteModule],
+    imports: [MessageModule, ToastModule, ButtonModule, FileUploadModule, ReactiveFormsModule, CommonModule, InputTextModule, AutoCompleteModule],
     //animations: fuseAnimations,
     providers: [MessageService],
     encapsulation: ViewEncapsulation.None
@@ -58,7 +58,7 @@ export class RegistrarBloqueoCuentaComponent implements OnInit {
         private commonService: CommonService,
         private securityEncryptedService: SecurityEncryptedService,
         private toastr: MessageService,
-         private fb: FormBuilder,
+        private fb: FormBuilder,
         private registrarBloqueoCuentaService: RegistrarBloqueoCuentaService,
         // public dialogRef: MatDialogRef<RegistrarBloqueoCuentaComponent>,
         // @Inject(MAT_DIALOG_DATA) public data: any
@@ -88,135 +88,483 @@ export class RegistrarBloqueoCuentaComponent implements OnInit {
     }
 
     getCombos() {
-        this.commonService.getMultipleCombosPromiseCuenta(['motivo-bloqueo-cuenta', 'estado-cuenta']).then(resp => {
-            this.estadosBloqueoCuenta = resp[1]['data']['listaEstadoCuenta'].map((item: any) => {
-                return {
-                    codigo: item.codigo,
-                    descripcion: item.descripcion,
-                    motivosBloqueoCuenta: []
+        var resp: any[] = [
+            {
+                "codigo": 0,
+                "mensaje": "OK",
+                "data": {
+                    "listaMotivoBloqueoCuenta": [
+                        {
+                            "codigoEstadoCuenta": null,
+                            "codigo": "00",
+                            "descripcion": "ACTIVA"
+                        },
+                        {
+                            "codigoEstadoCuenta": null,
+                            "codigo": "01",
+                            "descripcion": "FRAUDE"
+                        },
+                        {
+                            "codigoEstadoCuenta": null,
+                            "codigo": "02",
+                            "descripcion": "INACTIVIDAD"
+                        },
+                        {
+                            "codigoEstadoCuenta": null,
+                            "codigo": "03",
+                            "descripcion": "MANDATO LEGAL"
+                        },
+                        {
+                            "codigoEstadoCuenta": null,
+                            "codigo": "04",
+                            "descripcion": "DECISIÓN DE CLIENTE"
+                        },
+                        {
+                            "codigoEstadoCuenta": null,
+                            "codigo": "05",
+                            "descripcion": "DECISIÓN DE LA FOH"
+                        },
+                        {
+                            "codigoEstadoCuenta": null,
+                            "codigo": "06",
+                            "descripcion": "FALLECIMIENTO"
+                        },
+                        {
+                            "codigoEstadoCuenta": null,
+                            "codigo": "07",
+                            "descripcion": "TEMPORAL CONTRATO"
+                        },
+                        {
+                            "codigoEstadoCuenta": null,
+                            "codigo": "08",
+                            "descripcion": "JUDICIAL"
+                        },
+                        {
+                            "codigoEstadoCuenta": null,
+                            "codigo": "09",
+                            "descripcion": "ALERTA FRAUDE"
+                        },
+                        {
+                            "codigoEstadoCuenta": null,
+                            "codigo": "10",
+                            "descripcion": "ALERTA PLAFT"
+                        },
+                        {
+                            "codigoEstadoCuenta": null,
+                            "codigo": "11",
+                            "descripcion": "AFIL NO RECONOCIDA"
+                        },
+                        {
+                            "codigoEstadoCuenta": null,
+                            "codigo": "12",
+                            "descripcion": "POR ROBO CELULAR"
+                        }
+                    ]
                 }
-            });
-
-            this.motivosBloqueoCuenta = resp[0]['data']['listaMotivoBloqueoCuenta'].map((item: any) => {
-                return {
-                    codigo: item.codigo,
-                    descripcion: item.descripcion
+            },
+            {
+                "codigo": 0,
+                "mensaje": "OK",
+                "data": {
+                    "listaEstadoCuenta": [
+                        {
+                            "codigo": "01",
+                            "descripcion": "ACTIVA"
+                        },
+                        {
+                            "codigo": "02",
+                            "descripcion": "BLOQUEO TEMPORAL"
+                        },
+                        {
+                            "codigo": "03",
+                            "descripcion": "BLOQUEO PERMANENTE"
+                        },
+                        {
+                            "codigo": "04",
+                            "descripcion": "CIERRE"
+                        }
+                    ]
                 }
-            });
-
-            this.getEstadosMotivosBloqueoCuenta();
-
-        }).catch(_error => {
-            this.toastr.add({ severity: 'error', summary: 'Error getMultipleCombosPromiseCuenta', detail:'Error en el servicio de obtener parámetros' });
-            //this.toastr.error('Error en el servicio de obtener parámetros', 'Error getMultipleCombosPromiseCuenta');
+            }
+        ];
+        this.estadosBloqueoCuenta = resp[1]['data']['listaEstadoCuenta'].map((item: any) => {
+            return {
+                codigo: item.codigo,
+                descripcion: item.descripcion,
+                motivosBloqueoCuenta: []
+            }
         });
+
+        this.motivosBloqueoCuenta = resp[0]['data']['listaMotivoBloqueoCuenta'].map((item: any) => {
+            return {
+                codigo: item.codigo,
+                descripcion: item.descripcion
+            }
+        });
+
+        this.getEstadosMotivosBloqueoCuenta();
+
+        // this.commonService.getMultipleCombosPromiseCuenta(['motivo-bloqueo-cuenta', 'estado-cuenta']).then(resp => {
+        //     this.estadosBloqueoCuenta = resp[1]['data']['listaEstadoCuenta'].map((item: any) => {
+        //         return {
+        //             codigo: item.codigo,
+        //             descripcion: item.descripcion,
+        //             motivosBloqueoCuenta: []
+        //         }
+        //     });
+
+        //     this.motivosBloqueoCuenta = resp[0]['data']['listaMotivoBloqueoCuenta'].map((item: any) => {
+        //         return {
+        //             codigo: item.codigo,
+        //             descripcion: item.descripcion
+        //         }
+        //     });
+
+        //     this.getEstadosMotivosBloqueoCuenta();
+
+        // }).catch(_error => {
+        //     this.toastr.add({ severity: 'error', summary: 'Error getMultipleCombosPromiseCuenta', detail: 'Error en el servicio de obtener parámetros' });
+        //     //this.toastr.error('Error en el servicio de obtener parámetros', 'Error getMultipleCombosPromiseCuenta');
+        // });
     }
 
     getEstadosMotivosBloqueoCuenta() {
 
         const role = this.securityEncryptedService.getRolesDecrypted();
-        this.registrarBloqueoCuentaService.getEstadosMotivosBloqueoCuenta().subscribe((resp: any) => {
-            if (resp['codigo'] == 0) {
-
-                this.estadosMotivosBloqueoCuenta = resp['data'].content;
-
-                this.estadosMotivosBloqueoCuenta = this.estadosMotivosBloqueoCuenta.map(element => {
-                    const estado = this.estadosBloqueoCuenta.find(item => item.codigo === element.id.codigoEstadoCuenta);
-                    const motivo = this.motivosBloqueoCuenta.find(item => item.codigo === element.id.codigoRazonCuenta);
-
-                    return {
-                        ...element,
-                        estado,
-                        motivo
-                    };
-                }).filter(element => element.estado.descripcion !== 'CIERRE');
-
-                if (this.tipo == 'cancelacion') {
-
-                    this.estadosMotivosBloqueoCuenta = this.estadosMotivosBloqueoCuenta.filter((e: any) =>
-                        e.estado.descripcion === 'BLOQUEO PERMANENTE' &&
-                        (
-                            e.motivo.descripcion === 'DECISIÓN DE CLIENTE' ||
-                            e.motivo.descripcion === 'DECISIÓN DE LA FOH' ||
-
-                            e.motivo.descripcion === 'FRAUDE' ||
-                            e.motivo.descripcion === 'INACTIVIDAD' ||
-                            e.motivo.descripcion === 'MANDATO LEGAL' ||
-                            e.motivo.descripcion === 'FALLECIMIENTO' ||
-                            e.motivo.descripcion === 'AFIL NO RECONOCIDA'
-
-                        )
-                    );
-
-                } else if (this.tipo == 'bloqueo') {
-
-                    this.estadosMotivosBloqueoCuenta = this.estadosMotivosBloqueoCuenta.filter((e: any) =>
-                        !(e.estado.descripcion == 'BLOQUEO PERMANENTE' &&
-                            (e.motivo.descripcion == 'DECISIÓN DE CLIENTE' ||
-                                e.motivo.descripcion == 'DECISIÓN DE LA FOH'))
-                    );
-
-                } else {
-                    const estadoMotivosBloqueoCuenta = this.estadosMotivosBloqueoCuenta.find((e: any) =>
-                        e.estado.descripcion == 'ACTIVA' &&
-                        e.motivo.descripcion == 'ACTIVA'
-                    );
-
-                    if (estadoMotivosBloqueoCuenta) {
-                        this.formBloqueo.patchValue({
-                            estadoBloqueo: estadoMotivosBloqueoCuenta.estado,
-                            tipoBloqueo: estadoMotivosBloqueoCuenta.motivo
-                        });
-                    }
-                }
-
-                if (role == this.roles.PLAFT) {
-                    this.estadosMotivosBloqueoCuenta = this.estadosMotivosBloqueoCuenta.filter((e: any) =>
-                        e.estado.descripcion == 'BLOQUEO TEMPORAL' &&
-                        e.motivo.descripcion == 'ALERTA PLAFT'
-                    );
-                }
-
-                if (role == this.roles.FRAUDE) {
-                    this.estadosMotivosBloqueoCuenta = this.estadosMotivosBloqueoCuenta.filter((e: any) =>
-                        (e.estado.descripcion == 'ACTIVA' && e.motivo.descripcion == 'ACTIVA') ||
-                        (e.estado.descripcion == 'BLOQUEO TEMPORAL' && e.motivo.descripcion == 'ALERTA FRAUDE')
-                    );
-                }
-
-                if (role == this.roles.ATENCION_CLIENTE || role == this.roles.ATENCION_CLIENTE_TD) {
-                    this.estadosMotivosBloqueoCuenta = this.estadosMotivosBloqueoCuenta.filter((e: any) =>
-                        (e.estado.descripcion == 'ACTIVA' && e.motivo.descripcion == 'ACTIVA') ||
-                        (e.estado.descripcion == 'BLOQUEO TEMPORAL' && e.motivo.descripcion == 'TEMPORAL CONTRATO')
-                    );
-                }
-
-                for (const element of this.estadosMotivosBloqueoCuenta) {
-
-                    const index = this.estadosBloqueoCuenta.findIndex((item: any) => item.codigo === element.id.codigoEstadoCuenta);
-
-                    if (index > -1) {
-
-                        const motivo = this.motivosBloqueoCuenta.find((item: any) => item.codigo === element.id.codigoRazonCuenta);
-
-                        if (motivo) {
-                            this.estadosBloqueoCuenta[index].motivosBloqueoCuenta.push(motivo);
+        var resp: any = {
+            "codigo": 0,
+            "mensaje": "OK",
+            "data": {
+                "content": [
+                    {
+                        "id": {
+                            "codigoRazonCuenta": "00",
+                            "codigoEstadoCuenta": "01"
+                        }
+                    },
+                    {
+                        "id": {
+                            "codigoRazonCuenta": "01",
+                            "codigoEstadoCuenta": "03"
+                        }
+                    },
+                    {
+                        "id": {
+                            "codigoRazonCuenta": "01",
+                            "codigoEstadoCuenta": "04"
+                        }
+                    },
+                    {
+                        "id": {
+                            "codigoRazonCuenta": "02",
+                            "codigoEstadoCuenta": "03"
+                        }
+                    },
+                    {
+                        "id": {
+                            "codigoRazonCuenta": "02",
+                            "codigoEstadoCuenta": "04"
+                        }
+                    },
+                    {
+                        "id": {
+                            "codigoRazonCuenta": "03",
+                            "codigoEstadoCuenta": "03"
+                        }
+                    },
+                    {
+                        "id": {
+                            "codigoRazonCuenta": "03",
+                            "codigoEstadoCuenta": "04"
+                        }
+                    },
+                    {
+                        "id": {
+                            "codigoRazonCuenta": "04",
+                            "codigoEstadoCuenta": "02"
+                        }
+                    },
+                    {
+                        "id": {
+                            "codigoRazonCuenta": "04",
+                            "codigoEstadoCuenta": "03"
+                        }
+                    },
+                    {
+                        "id": {
+                            "codigoRazonCuenta": "04",
+                            "codigoEstadoCuenta": "04"
+                        }
+                    },
+                    {
+                        "id": {
+                            "codigoRazonCuenta": "05",
+                            "codigoEstadoCuenta": "03"
+                        }
+                    },
+                    {
+                        "id": {
+                            "codigoRazonCuenta": "05",
+                            "codigoEstadoCuenta": "04"
+                        }
+                    },
+                    {
+                        "id": {
+                            "codigoRazonCuenta": "06",
+                            "codigoEstadoCuenta": "03"
+                        }
+                    },
+                    {
+                        "id": {
+                            "codigoRazonCuenta": "06",
+                            "codigoEstadoCuenta": "04"
+                        }
+                    },
+                    {
+                        "id": {
+                            "codigoRazonCuenta": "07",
+                            "codigoEstadoCuenta": "02"
+                        }
+                    },
+                    {
+                        "id": {
+                            "codigoRazonCuenta": "08",
+                            "codigoEstadoCuenta": "02"
+                        }
+                    },
+                    {
+                        "id": {
+                            "codigoRazonCuenta": "09",
+                            "codigoEstadoCuenta": "02"
+                        }
+                    },
+                    {
+                        "id": {
+                            "codigoRazonCuenta": "10",
+                            "codigoEstadoCuenta": "02"
+                        }
+                    },
+                    {
+                        "id": {
+                            "codigoRazonCuenta": "11",
+                            "codigoEstadoCuenta": "03"
+                        }
+                    },
+                    {
+                        "id": {
+                            "codigoRazonCuenta": "11",
+                            "codigoEstadoCuenta": "04"
+                        }
+                    },
+                    {
+                        "id": {
+                            "codigoRazonCuenta": "12",
+                            "codigoEstadoCuenta": "02"
                         }
                     }
-                }
-
-                this.opcionesMotivoBloqueoCuenta = Array.from(new Set(
-                    this.estadosMotivosBloqueoCuenta.filter((item: any) =>
-                        item.estado.codigo != this.datosCuenta.codigoEstadoBloqueo &&
-                        item.motivo.codigo != this.datosCuenta.codigoMotivoBloqueo
-                    ).map((item: any) => item.motivo)
-                ));
-            } else if (resp['codigo'] == -1) {
-                this.toastr.add({ severity: 'error', summary: 'Error getEstadosMotivosBloqueoCuenta', detail: resp['mensaje'] });
+                ]
             }
-        }, (_error) => {
-            this.toastr.add({ severity: 'error', summary: 'Error getEstadosMotivosBloqueoCuenta', detail: 'Error en el servicio de obtener motivos de bloqueo' });
-        });
+        }
+        if (resp['codigo'] == 0) {
+
+            this.estadosMotivosBloqueoCuenta = resp['data'].content;
+
+            this.estadosMotivosBloqueoCuenta = this.estadosMotivosBloqueoCuenta.map(element => {
+                const estado = this.estadosBloqueoCuenta.find(item => item.codigo === element.id.codigoEstadoCuenta);
+                const motivo = this.motivosBloqueoCuenta.find(item => item.codigo === element.id.codigoRazonCuenta);
+
+                return {
+                    ...element,
+                    estado,
+                    motivo
+                };
+            }).filter(element => element.estado.descripcion !== 'CIERRE');
+
+            if (this.tipo == 'cancelacion') {
+
+                this.estadosMotivosBloqueoCuenta = this.estadosMotivosBloqueoCuenta.filter((e: any) =>
+                    e.estado.descripcion === 'BLOQUEO PERMANENTE' &&
+                    (
+                        e.motivo.descripcion === 'DECISIÓN DE CLIENTE' ||
+                        e.motivo.descripcion === 'DECISIÓN DE LA FOH' ||
+
+                        e.motivo.descripcion === 'FRAUDE' ||
+                        e.motivo.descripcion === 'INACTIVIDAD' ||
+                        e.motivo.descripcion === 'MANDATO LEGAL' ||
+                        e.motivo.descripcion === 'FALLECIMIENTO' ||
+                        e.motivo.descripcion === 'AFIL NO RECONOCIDA'
+
+                    )
+                );
+
+            } else if (this.tipo == 'bloqueo') {
+
+                this.estadosMotivosBloqueoCuenta = this.estadosMotivosBloqueoCuenta.filter((e: any) =>
+                    !(e.estado.descripcion == 'BLOQUEO PERMANENTE' &&
+                        (e.motivo.descripcion == 'DECISIÓN DE CLIENTE' ||
+                            e.motivo.descripcion == 'DECISIÓN DE LA FOH'))
+                );
+
+            } else {
+                const estadoMotivosBloqueoCuenta = this.estadosMotivosBloqueoCuenta.find((e: any) =>
+                    e.estado.descripcion == 'ACTIVA' &&
+                    e.motivo.descripcion == 'ACTIVA'
+                );
+
+                if (estadoMotivosBloqueoCuenta) {
+                    this.formBloqueo.patchValue({
+                        estadoBloqueo: estadoMotivosBloqueoCuenta.estado,
+                        tipoBloqueo: estadoMotivosBloqueoCuenta.motivo
+                    });
+                }
+            }
+
+            if (role == this.roles.PLAFT) {
+                this.estadosMotivosBloqueoCuenta = this.estadosMotivosBloqueoCuenta.filter((e: any) =>
+                    e.estado.descripcion == 'BLOQUEO TEMPORAL' &&
+                    e.motivo.descripcion == 'ALERTA PLAFT'
+                );
+            }
+
+            if (role == this.roles.FRAUDE) {
+                this.estadosMotivosBloqueoCuenta = this.estadosMotivosBloqueoCuenta.filter((e: any) =>
+                    (e.estado.descripcion == 'ACTIVA' && e.motivo.descripcion == 'ACTIVA') ||
+                    (e.estado.descripcion == 'BLOQUEO TEMPORAL' && e.motivo.descripcion == 'ALERTA FRAUDE')
+                );
+            }
+
+            if (role == this.roles.ATENCION_CLIENTE || role == this.roles.ATENCION_CLIENTE_TD) {
+                this.estadosMotivosBloqueoCuenta = this.estadosMotivosBloqueoCuenta.filter((e: any) =>
+                    (e.estado.descripcion == 'ACTIVA' && e.motivo.descripcion == 'ACTIVA') ||
+                    (e.estado.descripcion == 'BLOQUEO TEMPORAL' && e.motivo.descripcion == 'TEMPORAL CONTRATO')
+                );
+            }
+
+            for (const element of this.estadosMotivosBloqueoCuenta) {
+
+                const index = this.estadosBloqueoCuenta.findIndex((item: any) => item.codigo === element.id.codigoEstadoCuenta);
+
+                if (index > -1) {
+
+                    const motivo = this.motivosBloqueoCuenta.find((item: any) => item.codigo === element.id.codigoRazonCuenta);
+
+                    if (motivo) {
+                        this.estadosBloqueoCuenta[index].motivosBloqueoCuenta.push(motivo);
+                    }
+                }
+            }
+
+            this.opcionesMotivoBloqueoCuenta = Array.from(new Set(
+                this.estadosMotivosBloqueoCuenta.filter((item: any) =>
+                    item.estado.codigo != this.datosCuenta.codigoEstadoBloqueo &&
+                    item.motivo.codigo != this.datosCuenta.codigoMotivoBloqueo
+                ).map((item: any) => item.motivo)
+            ));
+        } else if (resp['codigo'] == -1) {
+            this.toastr.add({ severity: 'error', summary: 'Error getEstadosMotivosBloqueoCuenta', detail: resp['mensaje'] });
+        }
+        // this.registrarBloqueoCuentaService.getEstadosMotivosBloqueoCuenta().subscribe((resp: any) => {
+        //     if (resp['codigo'] == 0) {
+
+        //         this.estadosMotivosBloqueoCuenta = resp['data'].content;
+
+        //         this.estadosMotivosBloqueoCuenta = this.estadosMotivosBloqueoCuenta.map(element => {
+        //             const estado = this.estadosBloqueoCuenta.find(item => item.codigo === element.id.codigoEstadoCuenta);
+        //             const motivo = this.motivosBloqueoCuenta.find(item => item.codigo === element.id.codigoRazonCuenta);
+
+        //             return {
+        //                 ...element,
+        //                 estado,
+        //                 motivo
+        //             };
+        //         }).filter(element => element.estado.descripcion !== 'CIERRE');
+
+        //         if (this.tipo == 'cancelacion') {
+
+        //             this.estadosMotivosBloqueoCuenta = this.estadosMotivosBloqueoCuenta.filter((e: any) =>
+        //                 e.estado.descripcion === 'BLOQUEO PERMANENTE' &&
+        //                 (
+        //                     e.motivo.descripcion === 'DECISIÓN DE CLIENTE' ||
+        //                     e.motivo.descripcion === 'DECISIÓN DE LA FOH' ||
+
+        //                     e.motivo.descripcion === 'FRAUDE' ||
+        //                     e.motivo.descripcion === 'INACTIVIDAD' ||
+        //                     e.motivo.descripcion === 'MANDATO LEGAL' ||
+        //                     e.motivo.descripcion === 'FALLECIMIENTO' ||
+        //                     e.motivo.descripcion === 'AFIL NO RECONOCIDA'
+
+        //                 )
+        //             );
+
+        //         } else if (this.tipo == 'bloqueo') {
+
+        //             this.estadosMotivosBloqueoCuenta = this.estadosMotivosBloqueoCuenta.filter((e: any) =>
+        //                 !(e.estado.descripcion == 'BLOQUEO PERMANENTE' &&
+        //                     (e.motivo.descripcion == 'DECISIÓN DE CLIENTE' ||
+        //                         e.motivo.descripcion == 'DECISIÓN DE LA FOH'))
+        //             );
+
+        //         } else {
+        //             const estadoMotivosBloqueoCuenta = this.estadosMotivosBloqueoCuenta.find((e: any) =>
+        //                 e.estado.descripcion == 'ACTIVA' &&
+        //                 e.motivo.descripcion == 'ACTIVA'
+        //             );
+
+        //             if (estadoMotivosBloqueoCuenta) {
+        //                 this.formBloqueo.patchValue({
+        //                     estadoBloqueo: estadoMotivosBloqueoCuenta.estado,
+        //                     tipoBloqueo: estadoMotivosBloqueoCuenta.motivo
+        //                 });
+        //             }
+        //         }
+
+        //         if (role == this.roles.PLAFT) {
+        //             this.estadosMotivosBloqueoCuenta = this.estadosMotivosBloqueoCuenta.filter((e: any) =>
+        //                 e.estado.descripcion == 'BLOQUEO TEMPORAL' &&
+        //                 e.motivo.descripcion == 'ALERTA PLAFT'
+        //             );
+        //         }
+
+        //         if (role == this.roles.FRAUDE) {
+        //             this.estadosMotivosBloqueoCuenta = this.estadosMotivosBloqueoCuenta.filter((e: any) =>
+        //                 (e.estado.descripcion == 'ACTIVA' && e.motivo.descripcion == 'ACTIVA') ||
+        //                 (e.estado.descripcion == 'BLOQUEO TEMPORAL' && e.motivo.descripcion == 'ALERTA FRAUDE')
+        //             );
+        //         }
+
+        //         if (role == this.roles.ATENCION_CLIENTE || role == this.roles.ATENCION_CLIENTE_TD) {
+        //             this.estadosMotivosBloqueoCuenta = this.estadosMotivosBloqueoCuenta.filter((e: any) =>
+        //                 (e.estado.descripcion == 'ACTIVA' && e.motivo.descripcion == 'ACTIVA') ||
+        //                 (e.estado.descripcion == 'BLOQUEO TEMPORAL' && e.motivo.descripcion == 'TEMPORAL CONTRATO')
+        //             );
+        //         }
+
+        //         for (const element of this.estadosMotivosBloqueoCuenta) {
+
+        //             const index = this.estadosBloqueoCuenta.findIndex((item: any) => item.codigo === element.id.codigoEstadoCuenta);
+
+        //             if (index > -1) {
+
+        //                 const motivo = this.motivosBloqueoCuenta.find((item: any) => item.codigo === element.id.codigoRazonCuenta);
+
+        //                 if (motivo) {
+        //                     this.estadosBloqueoCuenta[index].motivosBloqueoCuenta.push(motivo);
+        //                 }
+        //             }
+        //         }
+
+        //         this.opcionesMotivoBloqueoCuenta = Array.from(new Set(
+        //             this.estadosMotivosBloqueoCuenta.filter((item: any) =>
+        //                 item.estado.codigo != this.datosCuenta.codigoEstadoBloqueo &&
+        //                 item.motivo.codigo != this.datosCuenta.codigoMotivoBloqueo
+        //             ).map((item: any) => item.motivo)
+        //         ));
+        //     } else if (resp['codigo'] == -1) {
+        //         this.toastr.add({ severity: 'error', summary: 'Error getEstadosMotivosBloqueoCuenta', detail: resp['mensaje'] });
+        //     }
+        // }, (_error) => {
+        //     this.toastr.add({ severity: 'error', summary: 'Error getEstadosMotivosBloqueoCuenta', detail: 'Error en el servicio de obtener motivos de bloqueo' });
+        // });
     }
 
     registrarBloqueo() {
@@ -272,7 +620,7 @@ export class RegistrarBloqueoCuentaComponent implements OnInit {
         this.files = [];
     }
 
-    uploader(event:any) {
+    uploader(event: any) {
         this.loadingFile = true;
         this.files = event.files;
         const filereader = new FileReader();
@@ -281,7 +629,7 @@ export class RegistrarBloqueoCuentaComponent implements OnInit {
             this.formBloqueo.get('archivosAdjuntos')!.setValue(filereader.result);
             this.formBloqueo.get('nombreArchivo')!.setValue(this.files[0].name);
             //this.toastr.info(`${this.files.length} archivos listos para enviar`, 'Carga exitosa');
-              this.toastr.add({ severity: 'info', summary: 'Carga exitosa', detail: `${this.files.length} archivos listos para enviar` });
+            this.toastr.add({ severity: 'info', summary: 'Carga exitosa', detail: `${this.files.length} archivos listos para enviar` });
             this.loadingFile = false;
         };
         filereader.onerror = () => {
@@ -291,7 +639,7 @@ export class RegistrarBloqueoCuentaComponent implements OnInit {
         };
     }
 
-    removeElement(event:any) {
+    removeElement(event: any) {
         if (this.files.length > 0) {
             this.formBloqueo.get('archivosAdjuntos')!.setValue(null);
             this.formBloqueo.get('nombreArchivo')!.setValue(null);
@@ -301,7 +649,7 @@ export class RegistrarBloqueoCuentaComponent implements OnInit {
         }
     }
 
-    filterElementMotivo(event:any, data:any) {
+    filterElementMotivo(event: any, data: any) {
         this.filteredElementMotivo = [];
         const query = event.query;
         for (let i = 0; i < data.length; i++) {
@@ -312,7 +660,7 @@ export class RegistrarBloqueoCuentaComponent implements OnInit {
         }
     }
 
-    filterElementEstado(event:any, data:any) {
+    filterElementEstado(event: any, data: any) {
         this.filteredElementEstado = [];
         const query = event.query;
         for (let i = 0; i < data.length; i++) {
@@ -323,7 +671,7 @@ export class RegistrarBloqueoCuentaComponent implements OnInit {
         }
     }
 
-    onElementSelect(event:any) {
+    onElementSelect(event: any) {
         this.opcionesEstadoBloqueoCuenta = [];
 
         this.formBloqueo.get('estadoBloqueo')!.patchValue(null);
