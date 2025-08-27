@@ -40,6 +40,7 @@ import { RegistrarBloqueoTarjetaComponent } from '../cuentas-modals/registrar-bl
 import { DetalleBotoneraComponent } from '../cuentas-modals/detalle-botonera/detalle-botonera.component';
 import { VerCuentaRelacionadaComponent } from '../cuentas-modals/ver-cuenta-relacionada/ver-cuenta-relacionada.component';
 import { SplitButton } from 'primeng/splitbutton';
+import { RegistrarRetencionComponent } from '../cuentas-modals/registrar-retencion/registrar-retencion.component';
 interface expandedRows {
     [key: string]: boolean;
 }
@@ -228,7 +229,38 @@ export class CuentasDetailsComponent implements OnInit {
     }
 
     openDialogRegistrarRetencion(): void {
-        throw new Error('Method not implemented.');
+        const saldoDisponible = this.datosSaldoPorPlan?.planes.find((e: any) => e.codigoPlan === '01');
+        if (!saldoDisponible) {
+            this.toastr.add({ severity: 'error', summary: '', detail: 'No se encontró saldo disponible' });            
+        }
+        const dialogRef = this.dialog.open(RegistrarRetencionComponent, {
+            header: 'Registrar retención',
+            width: '30vw',
+            modal: true,
+            styleClass: 'header-modal',
+            dismissableMask: true,  // permite cerrar al hacer click fuera
+            breakpoints: {
+                '960px': '75vw',
+                '640px': '90vw'
+            },
+            data: {
+                uidCuenta: this.uidCuenta,
+                uidCliente: this.uidCliente,
+                saldoDisponible: saldoDisponible?.capital
+            }
+        });
+
+        // dialogRef.afterClosed().subscribe(resp => {
+        //     if (resp !== undefined) {
+        //         if (resp.data['codigo'] == 0) {
+        //             this.getCuenta();
+        //             this.getCuentaRetenciones();
+        //             this.toastr.success('Retención registrada');
+        //         } else {
+        //             this.toastr.error('Error en el servicio de registrar retención', 'Error openDialogRegistrarRetencion');
+        //         }
+        //     }
+        // });
     }
     limpiar() {
 
@@ -507,7 +539,7 @@ export class CuentasDetailsComponent implements OnInit {
         //   this.toastr.warning('No se puede realizar la cancelación ya que la cuenta registra saldos mayores a 0.00');
         //   return;
         // }
-        let header ="";
+        let header = "";
         switch (tipo) {
             case 'bloqueo':
                 header = 'Bloqueo de cuenta';
