@@ -165,71 +165,73 @@
     <div class="card md:col-span-2">
         <div class="font-semibold text-xl mb-4">Bloqueos Cuenta</div>
         <p-fieldset legend="Bandeja de Resultado">
-            <p-table #dt3 resizableColumns="true" rowExpandMode="single"
-                styleClass="p-datatable-striped p-datatable-gridlines mi-tabla-personalizada"
-                currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros" [paginator]="true"
-                [showCurrentPageReport]="true" [filterDelay]="0" dataKey="idBloqueo" [rows]="rows"
-                [value]="datosCuentaBloqueos" [totalRecords]="datosCuentaBloqueos.length"
-                [loading]="loadingCuentaBloqueos">
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th scope="col" style="text-align: center;">
-                            <!-- <button mat-icon-button color="primary" (click)="getCuentaBloqueos()" matTooltipPosition="below"
-                            matTooltip="Refrescar">
-                            <mat-icon>refresh</mat-icon>
-                        </button> -->
-                            <button color="primary" (click)="getCuentaBloqueos()">
+            <!-- <div class="table-responsive"> -->
+                <p-table #dt3 resizableColumns="true" rowExpandMode="single"
+                    styleClass="p-datatable-striped p-datatable-gridlines mi-tabla-personalizada"
+                    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros" [paginator]="true"
+                    [showCurrentPageReport]="true" [filterDelay]="0" dataKey="idBloqueo" [rows]="rows"
+                    [value]="datosCuentaBloqueos" [totalRecords]="datosCuentaBloqueos.length"
+                    [loading]="loadingCuentaBloqueos">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th scope="col" style="text-align: center;">
+                                <!-- <button mat-icon-button color="primary" (click)="getCuentaBloqueos()" matTooltipPosition="below"
+                                matTooltip="Refrescar">
+                                <mat-icon>refresh</mat-icon>
+                            </button> -->
+                                <button color="primary" (click)="getCuentaBloqueos()">
+                                </button>
+                            </th>
+                            <th scope="col">Estado bloqueo</th>
+                            <th scope="col">Razón bloqueo</th>
+                            <th style="text-align: center;" scope="col">Fecha bloqueo</th>
+                            <th style="text-align: center;" scope="col">Archivo bloqueo</th>
+                            <th scope="col">Descripcion</th>
+                            <th style="text-align: center;" scope="col">Usuario creación</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData>
+                        <tr id="tableWithDetails">
+                            <td style="text-align: center;">
+                                <!-- <button mat-icon-button [matMenuTriggerFor]="menu" matTooltipPosition="above"
+                                matTooltip="Opciones">
+                                <mat-icon>more_vert</mat-icon>
                             </button>
-                        </th>
-                        <th scope="col">Estado bloqueo</th>
-                        <th scope="col">Razón bloqueo</th>
-                        <th style="text-align: center;" scope="col">Fecha bloqueo</th>
-                        <th style="text-align: center;" scope="col">Archivo bloqueo</th>
-                        <th scope="col">Descripcion</th>
-                        <th style="text-align: center;" scope="col">Usuario creación</th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-rowData>
-                    <tr id="tableWithDetails">
-                        <td style="text-align: center;">
-                            <!-- <button mat-icon-button [matMenuTriggerFor]="menu" matTooltipPosition="above"
-                            matTooltip="Opciones">
-                            <mat-icon>more_vert</mat-icon>
-                        </button>
-                        <mat-menu #menu="matMenu">
-                            <button mat-menu-item (click)="descargarTemplateConstanciaBloqueoCuentaPdf(rowData)">
-                                <i class="pi pi-cog" aria-hidden="true"></i>
-                                <span>Constancia de bloqueo</span>
-                            </button>
-                        </mat-menu> -->
-                        </td>
-                        <td>{{rowData.descripcionEstado}}</td>
-                        <td>{{rowData.descripcionMotivoBloqueo}}</td>
-                        <td style="text-align: center;">{{rowData.fechaBloqueo | date:'DD/MM/YYYY HH:mm:ss'}}</td>
-                        <td style="text-align: center;">
-                            <a href="javascript:void(0)" matTooltipPosition="above" matTooltip="Ver archivo"
-                                *ngIf="rowData.archivoSustento"
-                                (click)="openDialogVerArchivo(rowData.archivoSustento, rowData.nombreSustento)">{{rowData.nombreSustento}}
-                                <em class="pi pi-download"></em>
-                            </a>
-                        </td>
-                        <td>{{rowData.descripcion}}</td>
-                        <td style="text-align: center;">{{rowData.usuarioCreacion}}</td>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="emptymessage">
-                    <tr>
-                        <td colspan="7" style="text-align:left">Sin registros encontrados</td>
-                    </tr>
-                </ng-template>
-            </p-table>
+                            <mat-menu #menu="matMenu">
+                                <button mat-menu-item (click)="descargarTemplateConstanciaBloqueoCuentaPdf(rowData)">
+                                    <i class="pi pi-cog" aria-hidden="true"></i>
+                                    <span>Constancia de bloqueo</span>
+                                </button>
+                            </mat-menu> -->
+                            </td>
+                            <td>{{rowData.descripcionEstado}}</td>
+                            <td>{{rowData.descripcionMotivoBloqueo}}</td>
+                            <td style="text-align: center;">{{rowData.fechaBloqueo | date:'DD/MM/YYYY HH:mm:ss'}}</td>
+                            <td style="text-align: center;">
+                                <a href="javascript:void(0)" matTooltipPosition="above" matTooltip="Ver archivo"
+                                    *ngIf="rowData.archivoSustento"
+                                    (click)="openDialogVerArchivo(rowData.archivoSustento, rowData.nombreSustento)">{{rowData.nombreSustento}}
+                                    <em class="pi pi-download"></em>
+                                </a>
+                            </td>
+                            <td>{{rowData.descripcion}}</td>
+                            <td style="text-align: center;">{{rowData.usuarioCreacion}}</td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="7" style="text-align:left">Sin registros encontrados</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            <!-- </div>             -->
         </p-fieldset>
     </div>
 
     <div class="card md:col-span-2">
         <div class="font-semibold text-xl mb-4">Tarjetas</div>
         <p-fieldset legend="Bandeja de Resultado">
-            <p-table #dt5 resizableColumns="true" rowExpandMode="single"
+            <p-table #dt5 resizableColumns="true" rowExpandMode="single" 
                 styleClass="p-datatable-striped p-datatable-gridlines mi-tabla-personalizada" (onRowExpand)="getTarjetaBloqueos($event)"
                 currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros" [paginator]="true"
                 [showCurrentPageReport]="true" [filterDelay]="0" dataKey="idTarjeta" [rows]="rows"
