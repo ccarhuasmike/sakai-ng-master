@@ -7,7 +7,7 @@ import { SliderModule } from 'primeng/slider';
 import { Table, TableModule } from 'primeng/table';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ToggleButtonModule } from 'primeng/togglebutton';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { RatingModule } from 'primeng/rating';
@@ -41,6 +41,14 @@ import { DetalleBotoneraComponent } from '../cuentas-modals/detalle-botonera/det
 import { VerCuentaRelacionadaComponent } from '../cuentas-modals/ver-cuenta-relacionada/ver-cuenta-relacionada.component';
 import { SplitButton } from 'primeng/splitbutton';
 import { RegistrarRetencionComponent } from '../cuentas-modals/registrar-retencion/registrar-retencion.component';
+import { CalcularCuentaAhorroComponent } from '../cuentas-modals/calcular-cuenta-ahorro/calcular-cuenta-ahorro.component';
+import { CobroComisionComponent } from '../cuentas-modals/cobro-comision/cobro-comision.component';
+import { DisableContentByRoleDirective } from '@/layout/Utils/directives/disable-content-by-role.directive';
+import { DetalleMovimientoComponent } from '../cuentas-modals/detalle-movimiento/detalle-movimiento.component';
+import { DatePicker } from 'primeng/datepicker';
+import moment from 'moment';
+import { ExcelService } from '@/pages/service/excel.service';
+
 interface expandedRows {
     [key: string]: boolean;
 }
@@ -50,7 +58,9 @@ interface expandedRows {
     standalone: true,
     templateUrl: './cuentas-details.component.html',
     styleUrls: ['./cuentas-details.component.scss'],
-    imports: [
+    imports: [        
+        DatePicker,
+        DisableContentByRoleDirective,
         SplitButton,
         TabsModule,
         DynamicDialogModule,
@@ -77,15 +87,11 @@ interface expandedRows {
         TooltipModule,
         Breadcrumb
     ],
-    providers: [DialogService, ConfirmationService, MessageService, CustomerService, ProductService, DatetzPipe]
+    providers: [DatePipe,DialogService, ConfirmationService, MessageService, CustomerService, ProductService, DatetzPipe]
 })
 export class CuentasDetailsComponent implements OnInit {
-
-
-    items: MenuItem[] = [{ label: 'Components' }, { label: 'Form' }, { label: 'InputText', routerLink: '/inputtext' }];
+    items: MenuItem[] = [{ label: 'Consulta' , routerLink: '/uikit/cuenta' }, { label: 'Detalle Cuenta'  }];
     home: MenuItem = { icon: 'pi pi-home', routerLink: '/' };
-
-
     bin: string = '';
     listaRed: any[] = [];
     listProductos: any[] = [];
@@ -103,7 +109,8 @@ export class CuentasDetailsComponent implements OnInit {
 
     rows = 10;
 
-    //fechaRangoMovimientos: [Date, Date] = [null, null];
+    //fechaRangoMovimientos: [Date | null, Date | null] = [null, null];
+    fechaRangoMovimientos: Date[] | undefined;
     finiMovimientos: any = null;
     ffinMovimientos: any = null;
 
@@ -187,7 +194,7 @@ export class CuentasDetailsComponent implements OnInit {
             label: 'Envío de EECC',
             icon: 'pi pi-file',
             command: () => this.openDialogEnvioEstadoCuenta(),
-            visible: this.bin === '41',
+            //visible: this.bin === '41',
             //disabled: this.shouldDisableForRoles([roles.PLAFT, roles.FRAUDE, roles.ATENCION_CLIENTE]) || this.disableActions
         },
         {
@@ -201,9 +208,12 @@ export class CuentasDetailsComponent implements OnInit {
 
     ];
     constructor(
+        
+        private excelService: ExcelService,
         private cuentasDetailsService: CuentasDetailsService,
         private router: Router,
         private toastr: MessageService,
+        public datepipe: DatePipe,
         private customerService: CustomerService,
         private productService: ProductService,
         private commonService: CommonService,
@@ -212,6 +222,12 @@ export class CuentasDetailsComponent implements OnInit {
         private activatedRoute: ActivatedRoute,
         private dialog: DialogService
     ) {
+        const fechaFin = new Date(); // hoy
+        const fechaInicio = new Date();
+        fechaInicio.setDate(fechaFin.getDate() - 6); // hoy - 6 días
+
+        this.fechaRangoMovimientos = [fechaInicio, fechaFin];
+
         this.activatedRoute.params.subscribe((params: any) => {
             this.uidCuenta = params.cuenta ? this.securityEncryptedService.decrypt(params.cuenta) : this.uidCuenta;
             this.uidCliente = params.cliente ? this.securityEncryptedService.decrypt(params.cliente) : this.uidCliente;
@@ -221,17 +237,186 @@ export class CuentasDetailsComponent implements OnInit {
         });
     }
 
-    openDialogCalcularCuentaAhorro(): void {
-        throw new Error('Method not implemented.');
+    descargarExcelMovimientosMes() {
+
+        let datosMovimientosMes: any[] = this.datosMovimientos;
+
+        const fechaReporte = new Date();
+        const excelName = 'Reporte Movimientos ' + moment(fechaReporte).format('DD/MM/YYYY') + '.xlsx';
+        const sheetName = 'Datos';
+        const datos: any[] = [];
+        const header = [];
+        const isCurrency: any[] = [];
+        const filterLavel = 'Fecha de Reporte';
+
+        header.push('Fecha Movimiento');
+        header.push('Fecha Proceso');
+        header.push('Num. Tarjeta');
+        header.push('Cod. Descripción');
+        header.push('Descripción');
+        header.push('Tipo de Movimiento');
+        header.push('Importe');
+        header.push('Estado Confirmación');
+        header.push('Red(descripción)');
+        header.push('Reversado');
+        datosMovimientosMes.forEach(x => {
+
+            const list = [];
+
+            list.push(this.datepipe.transform(x.fechaTransaccion, 'dd/MM/yyyy HH:mm:ss'));
+            list.push(this.datepipe.transform(x.fechaContable, 'dd/MM/yyyy'));
+            list.push(x.enmascarado);
+            list.push(x.codigoClasificacionTransaccion);
+            list.push(x.descripcion);
+            list.push(x.tipoMovimiento);
+            list.push(x.monto);
+            list.push(x.estadoConfirmacion);
+            list.push(x.descOrigenInt);
+            list.push(x.reversado ? 'Si' : 'No');
+
+            datos.push(list);
+        });
+        this.excelService.generateExcel(header, excelName, sheetName, isCurrency, datos, fechaReporte, filterLavel);
     }
-    openDialogEnvioEstadoCuenta(): void {
-        throw new Error('Method not implemented.');
+    openDialogCalcularCuentaAhorro(): void {
+        const saldoDisponible = this.datosSaldoPorPlan?.planes.find((e: any) => e.codigoPlan === '01');
+
+        if (!saldoDisponible) {
+            this.toastr.add({ severity: 'error', summary: '', detail: 'No se encontró saldo disponible' });
+        }
+
+        const dialogRef = this.dialog.open(CalcularCuentaAhorroComponent, {
+            header: 'Ajuste de Saldo y Cálculo de Intereses',
+            width: '40vw',
+            modal: true,
+            styleClass: 'header-modal',
+            dismissableMask: true,  // permite cerrar al hacer click fuera
+            breakpoints: {
+                '960px': '75vw',
+                '640px': '90vw'
+            },
+            data: {
+                uidCliente: this.uidCliente,
+                uidCuenta: this.uidCuenta,
+                numeroCuenta: this.datosCuenta.numeroCuenta,
+                planes: this.datosSaldoPorPlan.planes,
+                tasa: this.datosInteresTarifario.tasaEquivalenteAnual,
+                saldoDisponible: saldoDisponible?.capital
+            }
+        });
+
+        // dialogRef.afterClosed().subscribe(resp => {
+        //     if (resp !== undefined) {
+        //         if (resp.data['codigo'] == 0) {
+        //             this.getCuenta();
+        //             this.toastr.success('Ajuste de saldo registrado');
+        //         } else {
+        //             this.toastr.error('Error en el servicio de ajustar saldo: ' + resp.data['mensaje'], 'Error openDialogAjustarSaldo');
+        //         }
+        //     }
+        // });
     }
 
+    visibilidadTarjeta(tarjeta: any) {
+        debugger;
+        if (tarjeta.numTarjetaVisible) {
+            this.datosTarjetas = this.datosTarjetas.map((item: any) => {
+                if (item.idTarjeta == tarjeta.idTarjeta) {
+                    item.numTarjetaVisible = false;
+                }
+                return item;
+            })
+        } else if (tarjeta?.desenmascarado) {
+            this.datosTarjetas = this.datosTarjetas.map((item: any) => {
+                if (item.idTarjeta == tarjeta.idTarjeta) {
+                    item.numTarjetaVisible = true;
+                }
+                return item;
+            })
+        } else {
+            const token = tarjeta.token
+            this.commonService.getCardNumberFullEncrypted(token).subscribe((resp: any) => {
+                if (resp['codigo'] == 0) {
+                    const body = resp;
+                    const datosTarjetaDecrypted = this.commonService.decryptResponseCardNumber(body);
+                    this.datosTarjetas = this.datosTarjetas.map((item: any) => {
+                        if (item.idTarjeta == tarjeta.idTarjeta) {
+                            item.numTarjetaVisible = true;
+                            const desenmascarado = datosTarjetaDecrypted.tarjeta.slice(3);
+                            return {
+                                ...item,
+                                desenmascarado
+                            }
+                        } else {
+                            return item;
+                        }
+                    })
+
+                } else {
+                    this.toastr.add({ severity: 'error', summary: 'Error visibilidadTarjeta()', detail: resp['mensaje'] });
+                }
+            }, (_error) => {
+                this.toastr.add({ severity: 'error', summary: 'Error visibilidadTarjeta()', detail: 'Error en el servicio de obtener tarjeta desencriptada' });
+            })
+        }
+    }
+
+    openDialogEnvioEstadoCuenta(): void {
+        const saldoDisponible = this.datosSaldoPorPlan?.planes.find((e: any) => e.codigoPlan === '01');
+
+        if (!saldoDisponible) {
+            this.toastr.add({ severity: 'error', summary: '', detail: 'No se encontró saldo disponible' });
+        }
+        const dialogRef = this.dialog.open(CobroComisionComponent, {
+            header: 'Envío de EECC',
+            width: '40vw',
+            modal: true,
+            styleClass: 'header-modal',
+            dismissableMask: true,  // permite cerrar al hacer click fuera
+            breakpoints: {
+                '960px': '75vw',
+                '640px': '90vw'
+            },
+            data: {
+                uidCuenta: this.uidCuenta,
+                uidCliente: this.uidCliente,
+                saldoDisponible: saldoDisponible?.capital
+            }
+        });
+
+        // dialogRef.afterClosed().subscribe(resp => {
+        //     if (resp !== undefined) {
+        //         if (resp.data['codigo'] == 0) {
+        //             this.getCuenta();
+        //             this.toastr.success('Ajuste de saldo registrado');
+        //         } else {
+        //             this.toastr.error('Error en el servicio de ajustar saldo', 'Error openDialogEnvioEstadoCuenta');
+        //         }
+        //     }
+        // });
+    }
+    openDialogDetalleMovimiento(data: any) {
+        this.dialog.open(DetalleMovimientoComponent, {
+            header: 'Detalle Movimiento',
+            width: '50vw',
+            modal: true,
+            styleClass: 'header-modal',
+            dismissableMask: true,  // permite cerrar al hacer click fuera
+            breakpoints: {
+                '960px': '75vw',
+                '640px': '90vw'
+            },
+            data: {
+                movimiento: data,
+                datosCliente: this.datosCliente,
+                datosCuenta: this.datosCuenta,
+            }
+        });
+    }
     openDialogRegistrarRetencion(): void {
         const saldoDisponible = this.datosSaldoPorPlan?.planes.find((e: any) => e.codigoPlan === '01');
         if (!saldoDisponible) {
-            this.toastr.add({ severity: 'error', summary: '', detail: 'No se encontró saldo disponible' });            
+            this.toastr.add({ severity: 'error', summary: '', detail: 'No se encontró saldo disponible' });
         }
         const dialogRef = this.dialog.open(RegistrarRetencionComponent, {
             header: 'Registrar retención',
@@ -1399,16 +1584,16 @@ export class CuentasDetailsComponent implements OnInit {
         //         this.toastr.error('Error en el servicio de obtener bloqueos cuenta', 'Error getCuentaBloqueos');
         //     });
     }
-    openDialogDetalleMovimiento(data: any) {
-        // this.dialog.open(DetalleMovimientoComponent, {
-        //   width: '900px',
-        //   data: {
-        //     movimiento: data,
-        //     datosCliente: this.datosCliente,
-        //     datosCuenta: this.datosCuenta,
-        //   }
-        // });
+    changeModelFechaRango(event: any) {
+        this.finiMovimientos = '';
+        this.ffinMovimientos = '';
+        if (event[0] !== null && event[1] !== null) {
+            this.finiMovimientos = moment(this.fechaRangoMovimientos![0]).format('YYYY-MM-DD') + 'T05:00:00.000Z';
+            this.ffinMovimientos = moment(this.fechaRangoMovimientos![1]).format('YYYY-MM-DD') + 'T05:00:00.000Z'
+            this.getCuentaMovimientos();
+        }
     }
+
     getCuentaMovimientos() {
         this.datosMovimientos = [];
         this.loadingMovimientos = true;

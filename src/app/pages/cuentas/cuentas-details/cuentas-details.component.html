@@ -4,8 +4,8 @@
     </div>
     <div class="md:col-span-1">
         <div class="flex justify-end">
-            <p-splitbutton label="Opciones"  [model]="itemsOpciones" severity="success" />
-        </div>        
+            <p-splitbutton label="Opciones" [model]="itemsOpciones" severity="success" />
+        </div>
     </div>
     <div class="card p-4 md:col-span-1">
         <div class="font-semibold text-xl mb-4">{{datosCuenta.producto}}</div>
@@ -230,23 +230,15 @@
         <div class="font-semibold text-xl mb-4">Tarjetas</div>
         <p-fieldset legend="Bandeja de Resultado">
             <p-table #dt5 resizableColumns="true" rowExpandMode="single"
-                styleClass="p-datatable-striped p-datatable-gridlines" (onRowExpand)="getTarjetaBloqueos($event)"
+                styleClass="p-datatable-striped p-datatable-gridlines mi-tabla-personalizada" (onRowExpand)="getTarjetaBloqueos($event)"
                 currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros" [paginator]="true"
                 [showCurrentPageReport]="true" [filterDelay]="0" dataKey="idTarjeta" [rows]="rows"
                 [value]="datosTarjetas" [totalRecords]="datosTarjetas.length" [loading]="loadingTarjetas">
                 <ng-template pTemplate="header">
                     <tr>
                         <th scope="col"></th>
-                        <th scope="col">
-
-                            <!-- <button mat-icon-button color="primary" (click)="getCuentaTarjetas()"
-                                matTooltipPosition="below" matTooltip="Refrescar">
-                                <mat-icon>refresh</mat-icon>
-                            </button> -->
-
-                            <p-button icon="pi pi-refresh" pTooltip="Refrescar" showDelay="1000" hideDelay="300"
-                                (click)="getCuentaTarjetas()" rounded raised />
-
+                        <th style="text-align: center;" scope="col">
+                            <p-button icon="pi pi-refresh" severity="secondary" pTooltip="Refrescar" showDelay="1000" hideDelay="300"(click)="getCuentaTarjetas()" rounded raised />
                         </th>
                         <th scope="col">Tipo de tarjeta</th>
                         <th style="text-align: center;" scope="col">Número de tarjeta</th>
@@ -270,7 +262,7 @@
                             </a> -->
                         </td>
                         <td style="text-align: center;">
-                            <p-button (click)="onButtonClick($event, rowData, menusss)" icon="pi pi-ellipsis-v" />
+                            <p-button severity="secondary" (click)="onButtonClick($event, rowData, menusss)" icon="pi pi-ellipsis-v" />
                             <p-menu appendTo="body" #menusss [model]="menuItems" [popup]="true"></p-menu>
                             <!-- <div>
                                 <button mat-icon-button [matMenuTriggerFor]="menu" matTooltipPosition="above"
@@ -294,19 +286,22 @@
                         </td>
                         <td>{{rowData.tipoTarjeta}}</td>
                         <td>
-                            <!-- <span *appDisableContentByRole="[roles.ATENCION_CLIENTE, roles.ATENCION_CLIENTE_TD, roles.CONSULTA,
+                            <span *appDisableContentByRole="[roles.ATENCION_CLIENTE, roles.ATENCION_CLIENTE_TD, roles.CONSULTA,
                                                     roles.OPERACION_CONTABLE,roles.PLAFT,roles.TI]">
-
-
-                                <button *ngIf="rowData.token" mat-icon-button matTooltipPosition="above"
+                                <p-button *ngIf="rowData.token" (onClick)="visibilidadTarjeta(rowData)"
+                                    [icon]="rowData.numTarjetaVisible ? 'pi pi-eye-slash' : 'pi pi-eye'"
+                                    pTooltip="Mostrar/Ocultar tarjeta" tooltipPosition="top"
+                                    styleClass="p-button-rounded p-button-text p-button-plain">
+                                </p-button>
+                                <!-- <button *ngIf="rowData.token" mat-icon-button matTooltipPosition="above"
                                     matTooltip="Mostrar/Ocultar tarjeta" (click)="visibilidadTarjeta(rowData)"
                                     style="padding-right: 25px;">
                                     <mat-icon *ngIf="!rowData.numTarjetaVisible">visibility</mat-icon>
                                     <mat-icon *ngIf="rowData.numTarjetaVisible">visibility_off</mat-icon>
-                                </button>
+                                </button> -->
                             </span>
                             <span *ngIf="!rowData.numTarjetaVisible">{{rowData.enmascarado}}</span>
-                            <span *ngIf="rowData.numTarjetaVisible">{{rowData.desenmascarado}}</span> -->
+                            <span *ngIf="rowData.numTarjetaVisible">{{rowData.desenmascarado}}</span>
                         </td>
                         <td style="text-align: center;">{{rowData.token}}</td>
                         <td style="text-align: center;">{{rowData.fechaAlta | date:'dd/MM/yyyy HH:mm:ss'}}</td>
@@ -330,74 +325,90 @@
                                                 [totalRecords]="datosTarjetaBloqueos.length"
                                                 [loading]="loadingTarjetaBloqueos">
                                                 <ng-template pTemplate="header">
-                    <tr>
-                        <th scope="col" style="width: 40px;"></th>
-                        <th scope="col">Estado bloqueo</th>
-                        <th scope="col">Razón bloqueo</th>
-                        <th style="text-align: center;" scope="col">Origen</th>
-                        <th style="text-align: center;" scope="col">Fecha bloqueo</th>
-                        <th style="text-align: center;" scope="col">Archivo bloqueo</th>
-                        <th scope="col">Descripcion</th>
-                        <th style="text-align: center;" scope="col">Usuario creación</th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-rowData>
-                    <tr id="tableWithoutIcon">
-                        <td style="text-align: center;">
-                            <!-- <div *ngIf="rowData.usuarioCreacion === 'IVR' || rowData.usuarioCreacion === 'WSP'">
-                                                                            <button mat-icon-button [matMenuTriggerFor]="menu"
-                                                                                matTooltipPosition="above" matTooltip="Opciones">
-                                                                                <mat-icon>more_vert</mat-icon>
-                                                                            </button>
-                                                                        </div>
-                                                                        <mat-menu #menu="matMenu">
-                                                                            <button mat-menu-item
-                                                                                (click)="descargarTemplateConstanciaBloqueoTarjetaPdf(rowData)">
-                                                                                <i class="pi pi-cog" aria-hidden="true"></i>
-                                                                                <span>Constancia de bloqueo</span>
-                                                                            </button>
-                                                                        </mat-menu> -->
+                                                    <tr>
+                                                        <th scope="col" style="width: 40px;"></th>
+                                                        <th scope="col">Estado bloqueo</th>
+                                                        <th scope="col">Razón bloqueo</th>
+                                                        <th style="text-align: center;" scope="col">Origen</th>
+                                                        <th style="text-align: center;" scope="col">Fecha bloqueo</th>
+                                                        <th style="text-align: center;" scope="col">Archivo bloqueo</th>
+                                                        <th scope="col">Descripcion</th>
+                                                        <th style="text-align: center;" scope="col">Usuario creación</th>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body" let-rowData>
+                                                    <tr id="tableWithoutIcon">
+                                                        <td style="text-align: center;">
+                                                            <!-- <div *ngIf="rowData.usuarioCreacion === 'IVR' || rowData.usuarioCreacion === 'WSP'">
+                                                                                                            <button mat-icon-button [matMenuTriggerFor]="menu"
+                                                                                                                matTooltipPosition="above" matTooltip="Opciones">
+                                                                                                                <mat-icon>more_vert</mat-icon>
+                                                                                                            </button>
+                                                                                                        </div>
+                                                                                                        <mat-menu #menu="matMenu">
+                                                                                                            <button mat-menu-item
+                                                                                                                (click)="descargarTemplateConstanciaBloqueoTarjetaPdf(rowData)">
+                                                                                                                <i class="pi pi-cog" aria-hidden="true"></i>
+                                                                                                                <span>Constancia de bloqueo</span>
+                                                                                                            </button>
+                                                                                                        </mat-menu> -->
+                                                        </td>
+                                                        <td>{{rowData.descCodEstado}}</td>
+                                                        <td>{{rowData.descMotivoBloqueo}}</td>
+                                                        <td style="text-align: center;">{{rowData.desCodOrigen}}</td>
+                                                        <td style="text-align: center;">{{rowData.fechaBloqueo | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                                        <td style="text-align: center;">
+                                                            <a href="javascript:void(0)" matTooltipPosition="above" matTooltip="Ver archivo"
+                                                                *ngIf="rowData.archivoSustento"
+                                                                (click)="openDialogVerArchivo(rowData.archivoSustento, rowData.nombreSustento)">{{rowData.nombreSustento}}
+                                                                <em class="pi pi-download"></em>
+                                                            </a>
+                                                        </td>
+                                                        <td>{{rowData.descripcion}}</td>
+                                                        <td style="text-align: center;">{{rowData.usuarioCreacion}}</td>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="emptymessage">
+                                                    <tr>
+                                                        <td colspan="8" style="text-align:left">Sin registros encontrados</td>
+                                                    </tr>
+                                                </ng-template>
+                                            </p-table>
+                                        </p-tabpanel>
+                                    </p-tabpanels>
+                                </p-tabs>
+                            </div>
                         </td>
-                        <td>{{rowData.descCodEstado}}</td>
-                        <td>{{rowData.descMotivoBloqueo}}</td>
-                        <td style="text-align: center;">{{rowData.desCodOrigen}}</td>
-                        <td style="text-align: center;">{{rowData.fechaBloqueo | date:'dd/MM/yyyy HH:mm:ss'}}</td>
-                        <td style="text-align: center;">
-                            <a href="javascript:void(0)" matTooltipPosition="above" matTooltip="Ver archivo"
-                                *ngIf="rowData.archivoSustento"
-                                (click)="openDialogVerArchivo(rowData.archivoSustento, rowData.nombreSustento)">{{rowData.nombreSustento}}
-                                <em class="pi pi-download"></em>
-                            </a>
-                        </td>
-                        <td>{{rowData.descripcion}}</td>
-                        <td style="text-align: center;">{{rowData.usuarioCreacion}}</td>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="emptymessage">
                     <tr>
-                        <td colspan="8" style="text-align:left">Sin registros encontrados</td>
+                        <td colspan="9" style="text-align:left">Sin registros encontrados</td>
                     </tr>
                 </ng-template>
             </p-table>
-            </p-tabpanel>
-            </p-tabpanels>
-            </p-tabs>
+        </p-fieldset>
     </div>
-    </td>
-    </tr>
-    </ng-template>
-    <ng-template pTemplate="emptymessage">
-        <tr>
-            <td colspan="9" style="text-align:left">Sin registros encontrados</td>
-        </tr>
-    </ng-template>
-    </p-table>
-    </p-fieldset>
-</div>
 
 <div class="card md:col-span-2">
     <div class="font-semibold text-xl mb-4">Movimientos</div>
+    <div class="grid grid-flow-row-dense sm:grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="md:col-span-1"></div>
+        <div class="md:col-span-1 flex items-end justify-end gap-2">
+            <p-datepicker 
+            class="w-full"
+            [(ngModel)]="fechaRangoMovimientos"
+            (ngModelChange)="changeModelFechaRango($event)" 
+            dateFormat="dd/mm/yy"
+            yearRange="1940:2030" selectionMode="range" 
+            />
+        </div>
+        <div class="md:col-span-1 flex items-end justify-end gap-2">
+            <p-button type="button" (click)="descargarExcelMovimientosMes()" label="Exportar Excel" icon="pi-file-excel"  />
+        </div>
+    </div>
     <p-fieldset legend="Bandeja de Resultado">
+
         <p-table #dt6 resizableColumns="true" rowExpandMode="single"
             styleClass="p-datatable-striped p-datatable-gridlines mi-tabla-personalizada"
             currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros" [paginator]="true"
@@ -406,11 +417,8 @@
             <ng-template pTemplate="header">
                 <tr>
                     <th scope="col"></th>
-                    <th scope="col">
-                        <!-- <button mat-icon-button color="primary" (click)="getCuentaMovimientos()"
-                            matTooltipPosition="below" matTooltip="Refrescar">
-                            <mat-icon>refresh</mat-icon>
-                        </button> -->
+                    <th style="text-align: center;" scope="col">
+                        <p-button icon="pi pi-refresh" pTooltip="Refrescar" severity="secondary" showDelay="1000" hideDelay="300"(click)="getCuentaMovimientos()" rounded raised />                        
                     </th>
                     <th style="text-align: center;" scope="col">Fecha Movimiento</th>
                     <th style="text-align: center;" scope="col">Fecha Proceso</th>
@@ -433,9 +441,8 @@
                         </a> -->
                     </td>
                     <td style="text-align: center;">
-                        <button class="buttonOption" (click)="openDialogDetalleMovimiento(rowData)" title="Detalle">
-                            <!-- <mat-icon class="iconCustomize">visibility</mat-icon> -->
-                        </button>
+                        <p-button severity="secondary" title="Detalle" (onClick)="openDialogDetalleMovimiento(rowData)" [icon]="'pi pi-eye'">
+                        </p-button>                        
                     </td>
                     <td style="text-align: center;">{{rowData.fechaTransaccion | date:'dd/MM/yyyy HH:mm:ss'}}</td>
                     <td style="text-align: center;">{{rowData.fechaContable | date:'dd/MM/yyyy'}}</td>
