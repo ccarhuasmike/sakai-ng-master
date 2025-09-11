@@ -46,7 +46,7 @@ export class VerCuentaRelacionadaComponent implements OnInit {
         const uidCuenta = this.securityEncryptedService.encrypt(data.uidCuenta);
         const uidCliente = this.securityEncryptedService.encrypt(data.uidCliente);         
 
-        this.router.navigate(['/uikit/detalle', {
+        this.router.navigate(['/cuenta/detalle', {
             cuenta: uidCuenta,
             cliente: uidCliente,
             tipoDoc: data.tipoDoc,

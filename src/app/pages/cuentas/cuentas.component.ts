@@ -362,7 +362,7 @@ export class CuentasComponent implements OnInit {
         const uidCuenta = this.securityEncryptedService.encrypt(data.uIdCuenta);
         const uidCliente = this.securityEncryptedService.encrypt(this.uidCliente);
 
-        this.router.navigate(['/uikit/detalle', {
+        this.router.navigate(['/cuenta/detalle', {
             cuenta: uidCuenta,
             cliente: uidCliente,
             tipoDoc: this.tipoDocumento,

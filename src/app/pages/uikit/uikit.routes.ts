@@ -14,12 +14,6 @@ import { TableDemo } from './tabledemo';
 import { OverlayDemo } from './overlaydemo';
 import { TreeDemo } from './treedemo';
 import { MenuDemo } from './menudemo';
-import { CuentasComponent } from '../cuentas/cuentas.component';
-import { CuentasDetailsComponent } from '../cuentas/cuentas-details/cuentas-details.component';
-
-
-
-
 export default [
     { path: 'button', data: { breadcrumb: 'Button' }, component: ButtonDemo },
     { path: 'charts', data: { breadcrumb: 'Charts' }, component: ChartDemo },
@@ -35,9 +29,7 @@ export default [
     { path: 'table', data: { breadcrumb: 'Table' }, component: TableDemo },
     { path: 'overlay', data: { breadcrumb: 'Overlay' }, component: OverlayDemo },
     { path: 'tree', data: { breadcrumb: 'Tree' }, component: TreeDemo },
-    { path: 'menu', data: { breadcrumb: 'Menu' }, component: MenuDemo },
-    { path: 'cuenta', data: { breadcrumb: 'Table' }, component: CuentasComponent },
-    { path: 'detalle', data: { breadcrumb: 'Table' }, component: CuentasDetailsComponent },
+    { path: 'menu', data: { breadcrumb: 'Menu' }, component: MenuDemo },    
     { path: '**', redirectTo: '/notfound' },
     
 ] as Routes;

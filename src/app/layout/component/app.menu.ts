@@ -9,6 +9,12 @@ import { AppMenuitem } from './app.menuitem';
     standalone: true,
     imports: [CommonModule, AppMenuitem, RouterModule],
     template: `<ul class="layout-menu">
+        <ng-container *ngFor="let item of modelT; let i = index">
+            <li app-menuitem *ngIf="!item.separator" [item]="item" [index]="i" [root]="true"></li>
+            <li *ngIf="item.separator" class="menu-separator"></li>
+        </ng-container>
+        <br>
+        <br>
         <ng-container *ngFor="let item of model; let i = index">
             <li app-menuitem *ngIf="!item.separator" [item]="item" [index]="i" [root]="true"></li>
             <li *ngIf="item.separator" class="menu-separator"></li>
@@ -17,8 +23,114 @@ import { AppMenuitem } from './app.menuitem';
 })
 export class AppMenu {
     model: MenuItem[] = [];
+    modelT: MenuItem[] = [];
 
     ngOnInit() {
+        this.modelT = [
+            {
+                label: 'Cuentas', icon: 'pi pi-fw pi-id-card',
+                items: [{ label: 'Listar cuenta', icon: 'pi pi-fw pi-id-card', routerLink: ['/cuenta'] }]
+            },
+            {
+                label: 'Mantenimiento',
+                items: [
+                    {
+                        label: 'Parámetros',
+                        icon: 'pi pi-fw pi-bookmark',
+                        items: [
+                            {
+                                label: 'Débito',
+                                icon: 'pi pi-fw pi-bookmark',
+                                routerLink: ['mantenimiento/parametro/debito']
+
+                            },
+                            {
+                                label: 'Tipo de Cambio',
+                                icon: 'pi pi-fw pi-bookmark',
+                                routerLink: ['mantenimiento/parametro/tipo-cambio']
+                            }
+                        ]
+                    },
+                    { label: 'Feriados', icon: 'pi pi-fw pi-calendar', routerLink: ['/uikit/formlayout'] },
+                    { label: 'Proveedor', icon: 'pi pi-fw pi-id-card', routerLink: ['/uikit/formlayout'] },
+                    { label: 'Banco', icon: 'pi pi-fw pi-building-columns', routerLink: ['/uikit/formlayout'] },
+                    { label: 'Cambio de Moneda', icon: 'pi pi-fw pi-dollar', routerLink: ['/uikit/formlayout'] },
+                ]
+            },
+            {
+                label: 'Consultas',
+                items: [
+                    { label: 'Transacciones Observadas', icon: 'pi pi-fw pi-id-card', routerLink: ['/uikit/formlayout'] },
+                    { label: 'Autorizaciones', icon: 'pi pi-fw pi-id-card', routerLink: ['/uikit/formlayout'] },
+                    {
+                        label: 'Tipo de Cambio', icon: 'pi pi-fw pi-id-card',
+                        items: [
+                            {
+                                label: 'Transacciones',
+                                icon: 'pi pi-fw pi-bookmark'
+                            },
+                            {
+                                label: 'Log de Transacciones',
+                                icon: 'pi pi-fw pi-bookmark'
+                            },
+                            {
+                                label: 'Pre-Liquidacion',
+                                icon: 'pi pi-fw pi-bookmark'
+                            },
+                            {
+                                label: 'Liquidaciones',
+                                icon: 'pi pi-fw pi-bookmark'
+                            },
+                            {
+                                label: 'Consultas',
+                                icon: 'pi pi-fw pi-bookmark'
+                            },
+                            {
+                                label: 'Operaciones por campaña',
+                                icon: 'pi pi-fw pi-bookmark'
+                            }
+                        ]
+                    },
+                    { label: 'Tokenización', icon: 'pi pi-fw pi-id-card', routerLink: ['/uikit/formlayout'] },
+                    { label: 'Solicitudes Ahorros Oh!', icon: 'pi pi-fw pi-id-card', routerLink: ['/uikit/formlayout'] },
+                ]
+            },
+
+            {
+                label: 'Ajustes Masivos',
+                items: [
+                    {
+                        label: 'Bloqueos', icon: 'pi pi-fw pi-id-card',
+                        items: [
+                            {
+                                label: 'Ejecutar Bloqueos',
+                                icon: 'pi pi-fw pi-bookmark'
+                            },
+                            {
+                                label: 'Historial Bloqueos',
+                                icon: 'pi pi-fw pi-bookmark'
+                            }
+                        ]
+                    },
+                    {
+                        label: 'Solicitudes Oh!', icon: 'pi pi-fw pi-id-card',
+                        items: [
+                            {
+                                label: 'Ejecutar Solicitudes',
+                                icon: 'pi pi-fw pi-bookmark'
+                            },
+                            {
+                                label: 'Historial Solicitudes',
+                                icon: 'pi pi-fw pi-bookmark'
+                            }
+                        ]
+                    },
+                ]
+            }
+
+
+
+        ]
         this.model = [
             {
                 label: 'Home',

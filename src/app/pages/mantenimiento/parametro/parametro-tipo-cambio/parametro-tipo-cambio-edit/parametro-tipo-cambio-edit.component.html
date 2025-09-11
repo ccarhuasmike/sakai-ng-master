@@ -1,0 +1,170 @@
+<p-toast></p-toast>
+<br>
+<form [formGroup]="formEdit">
+    <div class="grid grid-flow-row-dense sm:grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="md:col-span-1">
+            <label class="block mb-1 text-sm">
+                Grupo parámetro
+            </label>
+            <p-autoComplete class="w-full" name="grupoParametro" formControlName="grupoParametro"
+                [suggestions]="filteredElement" (completeMethod)="filterElement($event, groups)" optionLabel="nomTabla"
+                emptyMessage='Sin resultados' [dropdown]="true" appendTo="body">
+                <ng-template let-element>
+                    <div>{{element.nomTabla}}</div>
+                </ng-template>
+            </p-autoComplete>
+            <p-message *ngIf="formEdit.get('grupoParametro')?.invalid && formEdit.get('grupoParametro')?.dirty"
+                severity="error" variant="simple" size="small">
+                No es una opción
+            </p-message>
+        </div>
+        <div class="md:col-span-1">
+            <label class="block mb-1 text-sm">Descripción</label>
+            <input class="w-full" type="text" pInputText autocomplete="off" name="desElemento"
+                formControlName="desElemento" appendTo="body">
+            <p-message *ngIf="formEdit.get('desElemento')?.dirty && formEdit.get('desElemento')?.errors?.['required']"
+                severity="error" text="El campo es requerido">
+            </p-message>
+            <p-message *ngIf="formEdit.get('desElemento')?.dirty && formEdit.get('desElemento')?.errors?.['maxlength']"
+                severity="error" text="Máximo 1000 caracteres">
+            </p-message>
+        </div>
+        <div class="md:col-span-1">
+            <label class="block mb-1 text-sm">Valor entero</label>
+            <input class="w-full" type="text" pInputText autocomplete="off" name="valNumEntero" pKeyFilter="int"
+                formControlName="valNumEntero" appendTo="body">
+            <p-message *ngIf="formEdit.get('valNumEntero')?.dirty && formEdit.get('valNumEntero')?.errors?.['pattern']"
+                severity="error" text="Formato inválido">
+            </p-message>
+        </div>
+        <div class="md:col-span-1">
+            <label class="block mb-1 text-sm">Valor decimal</label>
+            <input class="w-full" type="text" pInputText autocomplete="off" name="valNumDecimal" pKeyFilter="num"
+                formControlName="valNumDecimal">
+
+            <p-message
+                *ngIf="formEdit.get('valNumDecimal')?.dirty && formEdit.get('valNumDecimal')?.errors?.['pattern']"
+                severity="error" text="Formato inválido">
+            </p-message>
+        </div>
+        <div class="md:col-span-1">
+            <label class="block mb-1 text-sm">Valor texto corto</label>
+            <input class="w-full" type="text" pInputText autocomplete="off" name="valCadCorto"
+                formControlName="valCadCorto">
+
+            <p-message *ngIf="formEdit.get('valCadCorto')?.dirty && formEdit.get('valCadCorto')?.errors?.['maxlength']"
+                severity="error" text="Máximo 10 caracteres">
+            </p-message>
+        </div>
+        <div class="md:col-span-1">
+            <label class="block mb-1 text-sm">Valor texto largo</label>
+            <input class="w-full" type="text" pInputText autocomplete="off" name="valCadLargo"
+                formControlName="valCadLargo">
+
+            <p-message *ngIf="formEdit.get('valCadLargo')?.dirty && formEdit.get('valCadLargo')?.errors?.['maxlength']"
+                severity="error" text="Máximo 50 caracteres">
+            </p-message>
+        </div>
+          <div class="md:col-span-3 flex items-end justify-end gap-2 footer-modal">
+            <p-button label="Aceptar" [disabled]="formEdit.invalid" (click)="editParametro()" />
+        </div>
+    </div>
+</form>
+<!-- 
+<div class="page-layout carded fullwidth">
+    
+    <div class="top-bg accent"></div>
+    
+
+    
+    <div class="center">
+
+        
+        <div class="header accent" fxLayout="column" fxLayoutAlign="center center" fxLayout.gt-xs="row"
+            fxLayoutAlign.gt-xs="space-between center">
+            <div style="padding-left: 5px;" class="p-grid p-align-center">
+                <mat-icon class="logo-icon s-32 mr-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+                    assignment
+                </mat-icon>
+                <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">Editando
+                    parámetro de tipo cambio</span>
+            </div>
+        </div>        
+
+        <div class="content-card">
+            <div class="content p-24">
+                <form [formGroup]="formEdit">
+                    <div class="p-grid p-fluid">
+                        <div class="p-col-12 p-md-4">
+                            <label>Grupo parámetro</label>
+                            <p-autoComplete name="grupoParametro" formControlName="grupoParametro"
+                                [suggestions]="filteredElement" (completeMethod)="filterElement($event, groups)"
+                                field="nomTabla" emptyMessage='Sin resultados' [dropdown]="true" appendTo="body">
+                                <ng-template let-element>
+                                    <div>{{element.nomTabla}}</div>
+                                </ng-template>
+                            </p-autoComplete>
+                            <mat-error
+                                [ngStyle]="{'display': formEdit.get('grupoParametro').dirty && !formEdit.get('grupoParametro').valid ? 'block' : 'none' }">
+                                No es una opción
+                            </mat-error>
+                        </div>
+                        <div class="p-col-12 p-md-4">
+                            <label>Descripción</label>
+                            <input type="text" pInputText autocomplete="off" name="desElemento"
+                                formControlName="desElemento" appendTo="body">
+                            <mat-error
+                                [ngStyle]="{'display': formEdit.get('desElemento').dirty && !formEdit.get('desElemento').valid ? 'block' : 'none' }">
+                                <span *ngIf="formEdit.get('desElemento').errors?.required">El campo es
+                                    requerido</span>
+                                <span *ngIf="formEdit.get('desElemento').errors?.maxlength">Máximo 1000
+                                    caracteres</span>
+                            </mat-error>
+                        </div>
+                        <div class="p-col-12 p-md-4">
+                            <label>Valor entero</label>
+                            <input type="text" pInputText autocomplete="off" name="valNumEntero" pKeyFilter="int"
+                                formControlName="valNumEntero" appendTo="body">
+                            <mat-error
+                                [ngStyle]="{'display': formEdit.get('valNumEntero').dirty && !formEdit.get('valNumEntero').valid ? 'block' : 'none' }">
+                                <span *ngIf="formEdit.get('valNumEntero').errors?.pattern">Formato inválido</span>
+                            </mat-error>
+                        </div>
+                        <div class="p-col-12 p-md-4">
+                            <label>Valor decimal</label>
+                            <input type="text" pInputText autocomplete="off" name="valNumDecimal" pKeyFilter="num"
+                                formControlName="valNumDecimal" appendTo="body">
+                            <mat-error
+                                [ngStyle]="{'display': formEdit.get('valNumDecimal').dirty && !formEdit.get('valNumDecimal').valid ? 'block' : 'none' }">
+                                <span *ngIf="formEdit.get('valNumDecimal').errors?.pattern">Formato inválido</span>
+                            </mat-error>
+                        </div>
+                        <div class="p-col-12 p-md-4">
+                            <label>Valor texto corto</label>
+                            <input type="text" pInputText autocomplete="off" name="valCadCorto"
+                                formControlName="valCadCorto" appendTo="body">
+                            <mat-error
+                                [ngStyle]="{'display': formEdit.get('valCadCorto').dirty && !formEdit.get('valCadCorto').valid ? 'block' : 'none' }">
+                                <span *ngIf="formEdit.get('valCadCorto').errors?.maxlength">Máximo 10 caracteres</span>
+                            </mat-error>
+                        </div>
+                        <div class="p-col-12 p-md-4">
+                            <label>Valor texto largo</label>
+                            <input type="text" pInputText autocomplete="off" name="valCadLargo"
+                                formControlName="valCadLargo" appendTo="body">
+                            <mat-error
+                                [ngStyle]="{'display': formEdit.get('valCadLargo').dirty && !formEdit.get('valCadLargo').valid ? 'block' : 'none' }">
+                                <span *ngIf="formEdit.get('valCadLargo').errors?.maxlength">Máximo 50 caracteres</span>
+                            </mat-error>
+                        </div>
+                    </div>
+                    <br>
+                    <div fxLayout="row" fxLayoutAlign="end center">
+                        <button mat-raised-button color="warn" [disabled]="formEdit.invalid"
+                            (click)="editParametro()">Actualizar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> -->

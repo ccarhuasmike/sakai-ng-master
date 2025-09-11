@@ -1,0 +1,55 @@
+<p-toast></p-toast>
+<br>
+
+<div class="grid grid-flow-row-dense sm:grid-cols-1 md:grid-cols-1 gap-4">
+    <form [formGroup]="form" novalidate>
+        <div class="md:col-span-1">
+            <label class="block mb-1 text-sm">Nombre del grupo</label>
+            <input class="w-full" type="text" name="nomTabla" formControlName="nomTabla" pInputText autocomplete="off">
+            <p-message *ngIf="form.get('nomTabla')?.dirty && form.get('nomTabla')?.errors?.['required']"
+                severity="error" text="Es requerido">
+            </p-message>
+            <p-message *ngIf="form.get('nomTabla')?.dirty && form.get('nomTabla')?.errors?.['maxlength']"
+                severity="error" text="Máximo 50 caracteres">
+            </p-message>
+        </div>
+        <div class="md:col-span-1 flex items-end justify-end  footer-modal">
+            <p-button label="Cancel" [text]="true" severity="secondary" (click)="closeGrupo()" />
+            <p-button label="Aceptar" [disabled]="form.invalid" (click)="addGrupo()" />
+        </div>
+    </form>
+</div>
+
+<!-- <div mat-dialog-content class="dialog-content-wrapper"
+    style="max-height: 85vh;display: flex;flex-direction: column;padding: 0 !important;margin-top: -24px !important;margin-bottom: -24px !important;">
+    <mat-toolbar matDialogTitle class="mat-accent m-0" style="min-height: initial;">
+        <mat-toolbar-row fxLayout="row" fxLayoutAlign="center center" style="display: unset;">
+            <div style="text-align: center;">
+                <span class="title dialog-title">Registrar nuevo grupo</span>
+            </div>
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <div mat-dialog-content class="p-24 pb-24 m-0" fusePerfectScrollbar>
+        <form [formGroup]="form" novalidate>
+            <div class="p-grid p-fluid p-align-center">
+                <div class="p-col-12">
+                    <label>Nombre del grupo</label>
+                    <input type="text" name="nomTabla" formControlName="nomTabla" pInputText autocomplete="off"
+                        appendTo="body">
+                    <mat-error
+                        [ngStyle]="{'display': form.get('nomTabla').dirty && !form.get('nomTabla').valid ? 'block' : 'none' }">
+                        <span *ngIf="form.get('nomTabla').errors?.required">Es requerido</span>
+                        <span *ngIf="form.get('nomTabla').errors?.maxlength">Máximo 50 caracteres</span>
+                    </mat-error>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="end center">
+        <button id="buttonConfirm" mat-raised-button color="warn" [disabled]="form.invalid" (click)="addGrupo()">
+            Aceptar
+        </button>
+    </div>
+</div> -->
