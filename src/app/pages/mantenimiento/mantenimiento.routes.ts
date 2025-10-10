@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
-import { ParametroDebitoComponent } from './parametro-debito/parametro-debito.component';
-import { ParametroTipoCambioComponent } from './parametro-tipo-cambio/parametro-tipo-cambio.component';
+import { ParametroDebitoComponent } from './parametro/parametro-debito/parametro-debito.component';
+import { ParametroTipoCambioComponent } from './parametro/parametro-tipo-cambio/parametro-tipo-cambio.component';
+import { BancoComponent } from './banco/banco.component';
+import { FeriadoComponent } from './feriado/feriado.component';
 // import { ButtonDemo } from './buttondemo';
 // import { ChartDemo } from './chartdemo';
 // import { FileDemo } from './filedemo';
@@ -25,6 +27,8 @@ import { ParametroTipoCambioComponent } from './parametro-tipo-cambio/parametro-
 export default [
     { path: 'parametro/debito', data: { breadcrumb: 'Button' }, component: ParametroDebitoComponent },
     { path: 'parametro/tipo-cambio', data: { breadcrumb: 'Button' }, component: ParametroTipoCambioComponent },
+    { path: 'banco', data: { breadcrumb: 'Button' }, component: BancoComponent },
+    { path: 'feriado', data: { breadcrumb: 'Button' }, component: FeriadoComponent },
     // { path: 'button', data: { breadcrumb: 'Button' }, component: ButtonDemo },
     // { path: 'charts', data: { breadcrumb: 'Charts' }, component: ChartDemo },
     // { path: 'file', data: { breadcrumb: 'File' }, component: FileDemo },

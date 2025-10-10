@@ -1,0 +1,75 @@
+<!-- <div mat-dialog-content class="dialog-content-wrapper"
+    style="max-height: 85vh;display: flex;flex-direction: column;padding: 0 !important;margin-top: -24px !important;margin-bottom: -24px !important;">
+    <mat-toolbar matDialogTitle class="mat-accent m-0" style="min-height: initial;">
+        <mat-toolbar-row fxLayout="row" fxLayoutAlign="center center" style="display: unset;">
+            <div style="text-align: center;">
+                <span class="title dialog-title">{{labelHeader}}</span>
+            </div>
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <div mat-dialog-content class="p-24 pb-24 m-0" fusePerfectScrollbar>
+        <form [formGroup]="form" novalidate>
+            <div class="p-grid p-fluid p-align-center">
+                <div class="p-col-12">
+                    <mat-label>Descripcion</mat-label>
+                    <input type="text" name="descripcion" formControlName="descripcion" pInputText autocomplete="off"
+                        appendTo="body">
+                    <mat-error
+                        [ngStyle]="{'display': form.get('descripcion').dirty && !form.get('descripcion').valid ? 'block' : 'none' }">
+                        <span *ngIf="form.get('descripcion').errors?.required">Es requerido</span>
+                        <span *ngIf="form.get('descripcion').errors?.maxlength">Máximo 50 caracteres</span>
+                    </mat-error>
+                </div>
+                <div class="p-col-12" style="padding-bottom: 0px; padding-top: 0px;">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Seleccionar el tipo de fecha</mat-label>
+                        <mat-select name="tipoFecha" formControlName="tipoFecha" autocomplete="off">
+                            <mat-option *ngFor="let item of tipoFecha" value={{item.tipoFecha}}>{{item.descripcionTipoFecha}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error
+                            [ngStyle]="{'display': form.get('tipoFecha').dirty && !form.get('tipoFecha').valid ? 'block' : 'none' }">
+                            <span *ngIf="form.get('tipoFecha').errors?.required">Es requerido</span>
+                            <span *ngIf="form.get('tipoFecha').errors?.maxlength">Máximo 50 caracteres</span>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="p-col-12">
+                    <mat-label>Fecha</mat-label>
+                    <p-calendar formControlName="fecha" name="fecha" [showIcon]="true" [locale]="es"
+                        dateFormat="dd/mm/yy" [monthNavigator]="true" [yearNavigator]="true" yearRange="1940:2030"
+                        appendTo="body"></p-calendar>
+                    <mat-error
+                        [ngStyle]="{'display': form.get('fecha').dirty && !form.get('fecha').valid ? 'block' : 'none' }">
+                        <span *ngIf="form.get('fecha').errors?.required">Es requerido</span>
+                        <span *ngIf="form.get('fecha').errors?.maxlength">Máximo 50 caracteres</span>
+                    </mat-error>
+                </div>
+                <div class="p-col-12">
+                    <mat-label>¿Repetir?&nbsp;&nbsp;</mat-label>
+                    <p-inputSwitch name="isRepeat" formControlName="isRepeat"></p-inputSwitch>
+                    <mat-error
+                        [ngStyle]="{'display': form.get('isRepeat').dirty && !form.get('isRepeat').valid ? 'block' : 'none' }">
+                        <span *ngIf="form.get('isRepeat').errors?.required">Es requerido</span>
+                        <span *ngIf="form.get('isRepeat').errors?.maxlength">Máximo 50 caracteres</span>
+                    </mat-error>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <div mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="end center">
+        <button mat-raised-button color="warn" mat-dialog-close>
+            <span>Cancelar</span>
+        </button>
+        <button id="buttonConfirm" *ngIf="!data.isEdit" [disabled]="!form.valid" mat-raised-button color="primary" (click)="addFeriado()">
+            <span *ngIf="!data.isEdit">Aceptar</span>
+        </button>
+        <button id="buttonConfirm" *ngIf="data.isEdit" [disabled]="!form.valid" mat-raised-button color="primary" (click)="updateFeriado()">
+            <span *ngIf="data.isEdit">Actualizar</span>
+        </button>
+        
+    </div>
+</div> -->

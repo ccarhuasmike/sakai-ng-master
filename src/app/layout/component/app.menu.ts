@@ -53,7 +53,7 @@ export class AppMenu {
                     },
                     { label: 'Feriados', icon: 'pi pi-fw pi-calendar', routerLink: ['/uikit/formlayout'] },
                     { label: 'Proveedor', icon: 'pi pi-fw pi-id-card', routerLink: ['/uikit/formlayout'] },
-                    { label: 'Banco', icon: 'pi pi-fw pi-building-columns', routerLink: ['/uikit/formlayout'] },
+                    { label: 'Banco', icon: 'pi pi-fw pi-building-columns', routerLink: ['/mantenimiento/banco'] },
                     { label: 'Cambio de Moneda', icon: 'pi pi-fw pi-dollar', routerLink: ['/uikit/formlayout'] },
                 ]
             },

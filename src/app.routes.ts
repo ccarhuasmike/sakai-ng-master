@@ -14,7 +14,7 @@ export const appRoutes: Routes = [
             { path: '', component: Dashboard },
             { path: 'cuenta', loadChildren: () => import('./app/pages/cuentas/cuentas.routes') },
             { path: 'uikit', loadChildren: () => import('./app/pages/uikit/uikit.routes') },
-            { path: 'mantenimiento', loadChildren: () => import('./app/pages/mantenimiento/parametro/parametro.routes') },
+            { path: 'mantenimiento', loadChildren: () => import('./app/pages/mantenimiento/mantenimiento.routes') },
             { path: 'documentation', component: Documentation },
             { path: 'pages', loadChildren: () => import('./app/pages/pages.routes') }
         ]

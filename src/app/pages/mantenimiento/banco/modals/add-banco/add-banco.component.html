@@ -1,0 +1,29 @@
+<p-toast></p-toast>
+<br>
+
+<div class="grid grid-flow-row-dense sm:grid-cols-1 md:grid-cols-1 gap-4">
+    <form [formGroup]="formAddBanco">
+        <div class="md:col-span-1">
+            <label class="block mb-1 text-sm">Código Banco</label>
+            <input class="w-full" type="text" name="codBanco" formControlName="codBanco" pInputText autocomplete="off">
+        </div>
+        <div class="md:col-span-1">
+            <label class="block mb-1 text-sm">Nombre Banco</label>
+            <input class="w-full" type="text" name="nombreBanco" formControlName="nombreBanco" pInputText autocomplete="off">
+        </div>
+        <div class="md:col-span-1 flex items-end justify-end  footer-modal">
+            <!-- <button *ngIf="isUpdate" [disabled]="!formAddBanco.valid || disableButtonAdd" mat-raised-button
+                color="primary" (click)="addBanco()">Guardar</button>
+            <button *ngIf="!isUpdate" [disabled]="disableButtonUpdate" mat-raised-button color="primary"
+                (click)="updateBanco()">Actualizar</button>
+            <button mat-raised-button color="warn" mat-dialog-close>
+                Cerrar
+            </button> -->
+
+            <p-button label="Guardar" [text]="true" severity="secondary"  *ngIf="isUpdate" [disabled]="!formAddBanco.valid || disableButtonAdd" (click)="addBanco()" />            
+            <p-button label="Actualizar" [text]="true" severity="secondary" *ngIf="!isUpdate" [disabled]="disableButtonUpdate" (click)="updateBanco()" />
+            <p-button label="Cerrar"  (click)="close()" />
+        </div>
+    </form>
+</div>
+
