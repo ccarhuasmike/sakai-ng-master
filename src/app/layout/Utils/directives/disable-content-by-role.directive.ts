@@ -25,7 +25,7 @@ export class DisableContentByRoleDirective {
     ) { }
 
     ngOnInit() {
-        debugger;
+        
         const role = this.securityEncryptedService.getRolesDecrypted();
 
         if (role) {

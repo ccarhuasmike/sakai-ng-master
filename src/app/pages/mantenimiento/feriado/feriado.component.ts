@@ -22,6 +22,8 @@ import { TabsModule } from "primeng/tabs";
 import { ToastModule } from "primeng/toast";
 import { TooltipModule } from "primeng/tooltip";
 import { CALENDAR_DETAIL } from "@/layout/Utils/constants/aba.constants";
+import { AddFeriadoComponent } from "./modals/add-feriado/add-feriado.component";
+
 
 @Component({
     selector: 'app-feriado',
@@ -29,7 +31,7 @@ import { CALENDAR_DETAIL } from "@/layout/Utils/constants/aba.constants";
     styleUrls: ['./feriado.component.scss'],
     standalone: true,
     imports: [ConfirmDialogModule, TooltipModule, TabsModule, MenuModule, DividerModule, InputNumberModule, DatePickerModule, TableModule, MessageModule, ToastModule, ButtonModule, FileUploadModule, ReactiveFormsModule, CommonModule, InputTextModule, AutoCompleteModule],
-    providers: [MessageService, DialogService, ConfirmationService],
+    providers: [DatePipe, MessageService, DialogService, ConfirmationService],
 })
 export class FeriadoComponent implements OnInit {
     mostrarFiltro = false;
@@ -41,8 +43,6 @@ export class FeriadoComponent implements OnInit {
     fechaFeriadoDesde: any = moment().format('YYYY-MM-DD');
     fechaFeriadoHasta: any = moment().format('YYYY-MM-DD');
     fechaRangoFeriados: [Date, Date] = [new Date(), new Date()];
-
-
 
     cols: any = [
         { field: 'descripcion', header: 'Descripción' },
@@ -80,13 +80,10 @@ export class FeriadoComponent implements OnInit {
             isRepeat: new FormControl()
         })
     }
-
-
     ngOnInit(): void {
         this.getCombos();
         this.getFeriados();
     }
-
     getCombos() {
         //LLamada servicio 
         this.isRepeat = [
@@ -94,14 +91,12 @@ export class FeriadoComponent implements OnInit {
             { id: 0, descripcion: 'No' }
         ]
     }
-
     changeModelFechaRangoFeriado(event: any) {
         this.fechaFeriadoDesde = '';
         this.fechaFeriadoHasta = '';
         if (event[0] !== null && event[1] !== null) {
             this.fechaFeriadoDesde = moment(event[0]).format('YYYY-MM-DD');
             this.fechaFeriadoHasta = moment(event[1]).format('YYYY-MM-DD');
-
             //Valida maximo 2 meses
             const fechaConfirmacionHastaAux = new Date(this.fechaFeriadoHasta);
             fechaConfirmacionHastaAux.setMonth(fechaConfirmacionHastaAux.getMonth() - 12);
@@ -110,36 +105,116 @@ export class FeriadoComponent implements OnInit {
                 return this.toastr.add({ severity: 'error', summary: 'Validacion de Fechas', detail: 'El intervalo de rango de fechas es 12 meses como maximo' });
                 //return this.toastr.warning('El intervalo de rango de fechas es 12 meses como maximo', 'Validacion de Fechas: ');
             }
-
             //this.getCuentaAutorizaciones();
         }
-
     }
-
     getFeriados() {
         this.loadingFeriados = true;
         this.datosFeriados = [];
         const indFeriado = this.formBusqueda.get('isRepeat')!.value;
-        console.log(indFeriado);
-        this.feriadoService.getFeriados(this.fechaFeriadoDesde, this.fechaFeriadoHasta, indFeriado?.id).subscribe((resp: any) => {
-            this.loadingFeriados = false;
-            console.log(resp);
-            this.datosFeriados = resp.data
-            this.datosFeriados.map(item => {
-                const tipoFecha = this.tipoFeriados.find(e => e.tipoFecha == item.tipoFecha)
-                item['descripcionTipoFecha'] = tipoFecha.descripcionTipoFecha;
-            })
-        }, (_error) => {
-            this.loadingFeriados = false;
-            this.toastr.add({ severity: 'error', summary: 'Error getFeriados', detail: 'Error en el servicio de obtencion de Feriados' });
-            //this.toastr.error('Error en el servicio de obtencion de Feriados', 'Error getFeriados');
+
+        this.loadingFeriados = false;
+        var resp = {
+            "codigo": 0,
+            "mensaje": "OK",
+            "data": [
+                {
+                    "idCalendario": 14,
+                    "codigo": "04",
+                    "descripcion": "INMACULADA CONCEPCION",
+                    "tipoFecha": 1,
+                    "fecha": "2024-12-08T00:00:00",
+                    "indRepetir": 1,
+                    "usuarioRegistro": "FOH",
+                    "fechaRegistro": "2024-02-28T15:55:48.397",
+                    "usuarioActualizacion": "FOH",
+                    "fechaActualizacion": "2024-03-07T15:59:08.056"
+                },
+                {
+                    "idCalendario": 15,
+                    "codigo": "04",
+                    "descripcion": "BATALLA DE AYACUCHO",
+                    "tipoFecha": 1,
+                    "fecha": "2024-12-09T00:00:00",
+                    "indRepetir": 1,
+                    "usuarioRegistro": "FOH",
+                    "fechaRegistro": "2024-02-28T15:55:48.397",
+                    "usuarioActualizacion": "FOH",
+                    "fechaActualizacion": "2024-03-07T15:59:08.056"
+                },
+                {
+                    "idCalendario": 16,
+                    "codigo": "04",
+                    "descripcion": "NAVIDAD",
+                    "tipoFecha": 1,
+                    "fecha": "2024-12-25T00:00:00",
+                    "indRepetir": 1,
+                    "usuarioRegistro": "FOH",
+                    "fechaRegistro": "2024-02-28T15:55:48.397",
+                    "usuarioActualizacion": "FOH",
+                    "fechaActualizacion": "2024-03-07T15:59:08.056"
+                }
+            ]
+        }
+        this.datosFeriados = resp.data
+        this.datosFeriados.map(item => {
+            const tipoFecha = this.tipoFeriados.find(e => e.tipoFecha == item.tipoFecha)
+            item['descripcionTipoFecha'] = tipoFecha.descripcionTipoFecha;
         })
+        this.loadingFeriados = false;
+
+        // this.feriadoService.getFeriados(this.fechaFeriadoDesde, this.fechaFeriadoHasta, indFeriado?.id).subscribe((resp: any) => {
+        //     this.loadingFeriados = false;
+        //     this.datosFeriados = resp.data
+        //     this.datosFeriados.map(item => {
+        //         const tipoFecha = this.tipoFeriados.find(e => e.tipoFecha == item.tipoFecha)
+        //         item['descripcionTipoFecha'] = tipoFecha.descripcionTipoFecha;
+        //     })
+        // }, (_error) => {
+        //     this.loadingFeriados = false;
+        //     this.toastr.add({ severity: 'error', summary: 'Error getFeriados', detail: 'Error en el servicio de obtencion de Feriados' });
+        // })
     }
-
-
-
     openDialogAddFeriado() {
-        console.log("add feriado:");
+        const dialogRef = this.dialog.open(AddFeriadoComponent, {
+            header: 'Registrar nuevo feriado',
+            width: '40vw',
+            modal: true,
+            styleClass: 'header-modal',
+            dismissableMask: true,  // permite cerrar al hacer click fuera
+            data: {
+                isEdit: false
+            },
+            breakpoints: {
+                '960px': '75vw',
+                '640px': '90vw'
+            }
+        });
+        dialogRef.onClose.subscribe((resp: any) => {
+            if (resp != undefined && resp != "") {
+                console.log("Registro de feriado", resp);
+                if (resp.data['codigo'] == 0) {
+                    this.toastr.add({ severity: 'success', summary: '', detail: 'Feriado registrado' });
+                    //this.toastr.success('Feriado registrado')
+                    this.getFeriados();
+                } else {
+                    this.toastr.add({ severity: 'error', summary: 'Error openDialogAddFeriado', detail: 'Error en el servicio de agregar feriado' });
+                    //this.toastr.error('Error en el servicio de agregar feriado', 'Error openDialogAddFeriado')
+                }
+            }
+            // if (res !== undefined && res !== "") {
+            //     if (res.data['codigo'] == 0 && res.accion == 'create') {
+            //         this.toastr.add({ severity: 'success', summary: '', detail: 'Banco registrado' });
+            //         this.getBancos();
+            //     } else if (res.data['codigo'] == 0 && res.accion == 'update') {
+            //         this.toastr.add({ severity: 'success', summary: '', detail: 'Banco actualizado' });
+            //         this.getBancos();
+            //     } else {
+            //         this.toastr.add({ severity: 'error', summary: 'Error openDialogAdd', detail: 'Error al registrar/actualizar el banco' });
+            //     }
+            // }
+        });
+
         // const dialogRef = this.dialog.open(AddFeriadoComponent, {
         //     width: '900px',
         //     data: {
@@ -160,7 +235,6 @@ export class FeriadoComponent implements OnInit {
         //     }
         // })
     }
-
     menuItems: any[] = [];
     onButtonClick(event: Event, rowData: any, menu: any) {
         this.menuItems = this.getMenuItems(rowData);
@@ -187,6 +261,32 @@ export class FeriadoComponent implements OnInit {
         return items;
     }
     openDialogEditarFeriado(feriado: any) {
+        const dialogRef = this.dialog.open(AddFeriadoComponent, {
+            header: 'Editar feriado',
+            width: '40vw',
+            modal: true,
+            styleClass: 'header-modal',
+            dismissableMask: true,  // permite cerrar al hacer click fuera
+            data: {
+                isEdit: true,
+                datosFeriado: feriado
+            },
+            breakpoints: {
+                '960px': '75vw',
+                '640px': '90vw'
+            }
+        });
+        dialogRef.onClose.subscribe((res: any) => {
+            if (res != undefined && res != "") {
+                if (res.data['codigo'] == 0) {
+                    this.toastr.add({ severity: 'success', summary: '', detail: 'Feriado actualizado' });
+                    this.getFeriados();
+                } else {
+                    this.toastr.add({ severity: 'error', summary: 'Error openDialogAddFeriado', detail: 'Error en el servicio de actualizar feriado' });
+                }
+            }
+        });
+
         // const dialogRef = this.dialog.open(AddFeriadoComponent, {
         //     width: '900px',
         //     data: {
@@ -206,10 +306,7 @@ export class FeriadoComponent implements OnInit {
         // })
 
     }
-
     eliminarFeriado(feriado: any) {
-        console.log("eliminar feriado:", feriado);
-
         this.confirmationService.confirm({
             header: 'Eliminar feriado',
             message: '¿Estás seguro de querer realizar esta acción?',
@@ -226,8 +323,7 @@ export class FeriadoComponent implements OnInit {
                 this.feriadoService.deleteFeriado(feriado.idCalendario).subscribe((resp: any) => {
                     if (resp) {
                         if (resp['codigo'] == 0) {
-                            this.toastr.add({ severity: 'success', summary: '', detail: 'Feriado eliminado' });
-                            //this.toastr.success('Feriado eliminado');
+                            this.toastr.add({ severity: 'success', summary: '', detail: 'Feriado eliminado' });                            
                             this.getFeriados();
                         } else {
                             this.toastr.add({ severity: 'error', summary: 'Error eliminarFeriado', detail: 'Error en el servicio de eliminar feriado' });

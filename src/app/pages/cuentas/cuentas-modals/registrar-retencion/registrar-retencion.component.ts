@@ -146,7 +146,7 @@ export class RegistrarRetencionComponent implements OnInit {
             ]
         }
         this.tipoRetencion = resp['data'];
-        debugger;
+        
         // this.commonService.getMultipleCombosPromise([
         //     'TIPO_RETENCION'
         // ]).then(resp => {

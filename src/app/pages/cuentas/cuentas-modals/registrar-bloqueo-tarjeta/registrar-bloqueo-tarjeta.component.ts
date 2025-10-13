@@ -308,7 +308,7 @@ export class RegistrarBloqueoTarjetaComponent implements OnInit {
         const filereader = new FileReader();
         filereader.readAsDataURL(this.files[0]);
         filereader.onload = () => {
-            debugger;
+            
             this.formBloqueo.get('archivosAdjuntos')!.setValue(filereader.result);
             this.formBloqueo.get('nombreArchivo')!.setValue(this.files[0].name);
             this.toastr.add({ severity: 'success', summary: 'Carga exitosa', detail: `${this.files.length} archivos listos para enviar` });
@@ -316,7 +316,7 @@ export class RegistrarBloqueoTarjetaComponent implements OnInit {
             this.loadingFile = false;
         };
         filereader.onerror = () => {
-            debugger;
+            
             this.toastr.add({ severity: 'error', summary: 'Carga fallida', detail: `No se pudo cargar los archivos` });
             this.loadingFile = false;
         };

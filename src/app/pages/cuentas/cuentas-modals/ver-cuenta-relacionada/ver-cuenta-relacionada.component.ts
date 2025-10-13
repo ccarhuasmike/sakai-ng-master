@@ -42,7 +42,7 @@ export class VerCuentaRelacionadaComponent implements OnInit {
     }
 
     goToAccount(data: any) {
-        debugger;
+        
         const uidCuenta = this.securityEncryptedService.encrypt(data.uidCuenta);
         const uidCliente = this.securityEncryptedService.encrypt(data.uidCliente);         
 

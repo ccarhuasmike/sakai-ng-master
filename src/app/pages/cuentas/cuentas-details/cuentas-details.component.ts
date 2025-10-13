@@ -318,7 +318,7 @@ export class CuentasDetailsComponent implements OnInit {
     }
 
     visibilidadTarjeta(tarjeta: any) {
-        debugger;
+        
         if (tarjeta.numTarjetaVisible) {
             this.datosTarjetas = this.datosTarjetas.map((item: any) => {
                 if (item.idTarjeta == tarjeta.idTarjeta) {
@@ -836,7 +836,7 @@ export class CuentasDetailsComponent implements OnInit {
     }
     dialogRef: DynamicDialogRef | undefined;
     openDialogRegistrarBloqueoTarjeta(tarjeta: any) {
-        debugger;
+        
         this.dialogRef = this.dialog.open(RegistrarBloqueoTarjetaComponent, {
             header: 'Registrar bloqueo de Tarjeta',
             width: '40vw',
