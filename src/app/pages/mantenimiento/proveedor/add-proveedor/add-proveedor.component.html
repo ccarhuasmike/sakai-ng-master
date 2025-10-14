@@ -1,0 +1,423 @@
+<div class="page-layout carded fullwidth tabbed">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- CONTENT HEADER -->
+        <div class="header accent" fxLayout="row" fxLayoutAlign="center center" fxLayout.gt-xs="row"
+            fxLayoutAlign.gt-xs="start center">
+            <mat-icon class="logo-icon s-32 mr-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+                person
+            </mat-icon>
+            <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                Creando Proveedor
+            </span>
+        </div>
+        <!-- / CONTENT HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+            <div class="toolbar px-24 py-8">
+                <button mat-icon-button (click)="regresar()">
+                    <mat-icon>keyboard_backspace</mat-icon>
+                </button>
+                <span>Regresar</span>
+            </div>
+
+            <!-- CONTENT BENEFICIARY-->
+            <!-- vertical STEPPER EXAMPLE -->
+            <h1 class="px-24 mb-0">Proveedor</h1>
+            <mat-vertical-stepper [linear]="true" fusePerfectScrollbar>
+                <mat-step [stepControl]="formTipoProveedor">
+                    <div mat-dialog-content class="px-24 pb-0 m-0">
+                        <ng-template matStepLabel>¿Que tipo de proveedor deseas crear?</ng-template>
+                        <form [formGroup]="formTipoProveedor" novalidate>
+                            <div class="p-grid p-fluid" style="margin-bottom: 8px;">
+                                <div class="p-col-12">
+                                    <label>Tipo proveedor(*)</label>
+                                    <p-autoComplete name="tipoProveedor" formControlName="tipoProveedor"
+                                        [suggestions]="filteredElement"
+                                        (completeMethod)="filterElement($event, tipoProveedor)"
+                                        (ngModelChange)="changeModelTipoProveedor($event, 'proveedor')"
+                                        field="descripcion" emptyMessage='Sin resultados' [dropdown]="true"
+                                        appendTo="body">
+                                        <ng-template let-element>
+                                            <div>{{element.descripcion}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                    <!-- <mat-error
+                                        [ngStyle]="{'display': formTipoProveedor.get('tipoBeneficiario').dirty && !formTipoProveedor.get('tipoBeneficiario').valid ? 'block' : 'none' }">
+                                        No es una opción
+                                    </mat-error> -->
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <br>
+                    <div mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
+                        <button pButton matStepperNext [disabled]="!formTipoProveedor.valid" type="button"
+                            label="Siguiente" class="p-button-info"></button>
+                    </div>
+                </mat-step>
+                <mat-step [stepControl]="formInfoBasicaProveedor">
+                    <div mat-dialog-content class="px-24 pb-0 m-0">
+                        <ng-template matStepLabel>Informacion basica proveedor</ng-template>
+                        <form [formGroup]="formInfoBasicaProveedor">
+                            <div class="p-grid p-fluid">
+                                <div class="p-col-12 p-md-6">
+                                    <label>¿Registrara vinculación con otro proveedor?&nbsp;</label>
+                                    <p-inputSwitch formControlName="isPartner"
+                                        (onChange)="onChangeSwitch($event)"></p-inputSwitch>
+                                    <mat-error
+                                        [ngStyle]="{'display': formInfoBasicaProveedor.get('tipoDocumento').dirty && !formInfoBasicaProveedor.get('tipoDocumento').valid ? 'block' : 'none' }">
+                                        No es una opción
+                                    </mat-error>
+                                </div>
+                                <div class="p-col-12 p-md-6"
+                                    *ngIf="formInfoBasicaProveedor.get('isPartner').value==true">
+                                    <label>Proveedores</label>
+                                    <p-autoComplete name="proveedor" formControlName="proveedor"
+                                        [suggestions]="filteredElement"
+                                        (completeMethod)="filterElementProveedor($event, proveedores)"
+                                        (ngModelChange)="changeModelProveedor($event, 'proveedor')" field="nombreGenerico"
+                                        emptyMessage='Sin resultados' [dropdown]="true" appendTo="body">
+                                        <ng-template let-element>
+                                            <div>{{element.nombreGenerico}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                    <mat-error
+                                        [ngStyle]="{'display': formInfoBasicaProveedor.get('isPartner').dirty && !formInfoBasicaProveedor.get('isPartner').valid ? 'block' : 'none' }">
+                                        No es una opción
+                                    </mat-error>
+                                </div>
+                            </div>
+                            <div class="p-grid p-fluid">
+                                <div class="p-col-12 p-md-6">
+                                    <label>Tipo documento</label>
+                                    <p-autoComplete name="tipoDocumento" formControlName="tipoDocumento"
+                                        [suggestions]="filteredElement"
+                                        (completeMethod)="filterElement($event, tipoDocumentoProveedor)"
+                                        (ngModelChange)="changeModelTipoDocumento($event, 'proveedor')"
+                                        field="descripcion" emptyMessage='Sin resultados' [dropdown]="true"
+                                        appendTo="body">
+                                        <ng-template let-element>
+                                            <div>{{element.descripcion}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                    <mat-error
+                                        [ngStyle]="{'display': formInfoBasicaProveedor.get('tipoDocumento').dirty && !formInfoBasicaProveedor.get('tipoDocumento').valid ? 'block' : 'none' }">
+                                        No es una opción
+                                    </mat-error>
+                                </div>
+                                <div class="p-col-12 p-md-6">
+                                    <label>Número documento</label>
+                                    <input type="text" autocomplete="off" #valorDocumento pInputText
+                                        [pKeyFilter]="nroCaracterProveedor==12?'alphanum':'pint'" name="nroDocumento"
+                                        formControlName="nroDocumento" [style]="{'text-transform': 'uppercase'}"
+                                        [attr.minlength]="nroCaracterProveedor" [attr.maxlength]="nroCaracterProveedor">
+                                    <br>
+                                    <div fxLayout="row" fxLayoutAlign="end center">
+                                        <mat-hint align="end" style="position: absolute;padding-top: 14px;"
+                                            *ngIf="nroCaracterProveedor!==0">{{valorDocumento.value.length}} /
+                                            {{nroCaracterProveedor}}
+                                        </mat-hint>
+                                    </div>
+                                </div>
+                                <div class="p-col-12 p-md-6">
+                                    <label>IDC</label>
+                                    <input type="text" autocomplete="off" pInputText name="idc" pKeyFilter="pint"
+                                        formControlName="idc">
+                                </div>
+                            </div>
+                            <!-- Se muestra el formuario de acuerdo al tipo de proveedor -->
+                            <div *ngIf="formTipoProveedor.get('tipoProveedor').value?.id=='01'" class="p-grid p-fluid"
+                                style="margin-bottom: 8px;">
+                                <div class="p-col-12 p-md-6 p-lg-4">
+                                    <label>Primer Nombre(*)</label>
+                                    <input type="text" autocomplete="off" pInputText name="primerNombre"
+                                        formControlName="primerNombre">
+                                    <mat-error
+                                        [ngStyle]="{'display': formInfoBasicaProveedor.get('primerNombre').dirty && !formInfoBasicaProveedor.get('primerNombre').valid ? 'block' : 'none' }">
+                                        Es requerido
+                                    </mat-error>
+                                </div>
+                                <div class="p-col-12 p-md-6 p-lg-4">
+                                    <label>Segundo Nombre</label>
+                                    <input type="text" autocomplete="off" pInputText name="segundoNombre"
+                                        formControlName="segundoNombre">
+                                    <mat-error
+                                        [ngStyle]="{'display': formInfoBasicaProveedor.get('segundoNombre').dirty && !formInfoBasicaProveedor.get('segundoNombre').valid ? 'block' : 'none' }">
+                                        Es requerido
+                                    </mat-error>
+                                </div>
+                                <div class="p-col-12 p-md-6 p-lg-4">
+                                    <label>Primer apellido(*)</label>
+                                    <input type="text" autocomplete="off" pInputText name="primerApellido"
+                                        formControlName="primerApellido">
+                                    <mat-error
+                                        [ngStyle]="{'display': formInfoBasicaProveedor.get('primerApellido').dirty && !formInfoBasicaProveedor.get('primerApellido').valid ? 'block' : 'none' }">
+                                        Es requerido
+                                    </mat-error>
+                                </div>
+                                <div class="p-col-12 p-md-6 p-lg-4">
+                                    <label>Segundo apellido(*)</label>
+                                    <input type="text" autocomplete="off" pInputText name="segundoApellido"
+                                        formControlName="segundoApellido">
+                                    <mat-error
+                                        [ngStyle]="{'display': formInfoBasicaProveedor.get('segundoApellido').dirty && !formInfoBasicaProveedor.get('segundoApellido').valid ? 'block' : 'none' }">
+                                        Es requerido
+                                    </mat-error>
+                                </div>
+                            </div>
+                            <div *ngIf="formTipoProveedor.get('tipoProveedor').value?.id=='02'" class="p-grid p-fluid"
+                                style="margin-bottom: 8px;">
+                                <div class="p-col-12">
+                                    <label>Razón social(*)</label>
+                                    <input type="text" autocomplete="off" pInputText name="razonSocial"
+                                        formControlName="razonSocial">
+                                    <mat-error
+                                        [ngStyle]="{'display': formInfoBasicaProveedor.get('razonSocial').dirty && !formInfoBasicaProveedor.get('razonSocial').valid ? 'block' : 'none' }">
+                                        Es requerido
+                                    </mat-error>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <br>
+                    <div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
+                        <button pButton matStepperPrevious type="button" label="Atrás"
+                            class="p-button-info ml-8"></button>
+                        <button pButton matStepperNext type="submit" label="Siguiente" class="p-button-info"
+                            [disabled]="!formInfoBasicaProveedor?.valid"></button>
+                    </div>
+                </mat-step>
+
+                <mat-step [stepControl]="formInfoContactoProveedor">
+                    <div mat-dialog-content class="px-24 pb-0 m-0">
+                        <ng-template matStepLabel>Datos Contacto</ng-template>
+                        <form [formGroup]="formInfoContactoProveedor">
+                            <div class="p-grid p-fluid">
+                                <div class="p-col-12 p-md-6">
+                                    <label>Nombre(*)</label>
+                                    <input type="text" pInputText autocomplete="off" name="nombre"
+                                        formControlName="nombre" appendTo="body">
+                                    <mat-error
+                                        [ngStyle]="{'display': formInfoContactoProveedor.get('nombre').dirty && !formInfoContactoProveedor.get('nombre').valid ? 'block' : 'none' }">
+                                        formato inválido
+                                    </mat-error>
+                                </div>
+                                <div class="p-col-12 p-md-6">
+                                    <label>Correo(*)</label>
+                                    <input type="text" pInputText autocomplete="off" name="correo"
+                                        formControlName="correo" appendTo="body">
+                                    <mat-error
+                                        [ngStyle]="{'display': formInfoContactoProveedor.get('correo').dirty && !formInfoContactoProveedor.get('correo').valid ? 'block' : 'none' }">
+                                        formato inválido
+                                    </mat-error>
+                                </div>
+                                <div class="p-col-12 p-md-6">
+                                    <label>Teléfono</label>
+                                    <input type="text" pInputText autocomplete="off" name="telefono" pKeyFilter="pint"
+                                        formControlName="telefono" appendTo="body">
+                                    <mat-error
+                                        [ngStyle]="{'display': formInfoContactoProveedor.get('telefono').dirty && !formInfoContactoProveedor.get('telefono').valid ? 'block' : 'none' }">
+                                        formato inválido
+                                    </mat-error>
+                                </div>
+                                <div class="p-col-12 p-md-6">
+                                    <label>Celular(*)</label>
+                                    <input type="text" pInputText autocomplete="off" [attr.maxlength]="9"
+                                        pKeyFilter="pint" name="celular" formControlName="celular">
+                                </div>
+                                <div class="p-col-12 p-md-6">
+                                    <label>Anexo</label>
+                                    <input type="text" autocomplete="off" pInputText name="anexo" pKeyFilter="pint"
+                                        formControlName="anexo">
+                                    <mat-error
+                                        [ngStyle]="{'display': formInfoContactoProveedor.get('anexo').dirty && !formInfoContactoProveedor.get('anexo').valid ? 'block' : 'none' }">
+                                        Es requerido
+                                    </mat-error>
+                                    <br>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <br>
+                    <div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
+                        <button pButton matStepperPrevious type="button" label="Atrás"
+                            class="p-button-info ml-8"></button>
+                        <button pButton matStepperNext type="submit" label="Siguiente" class="p-button-info"
+                            [disabled]="!formInfoContactoProveedor.valid"></button>
+                    </div>
+                </mat-step>
+                <mat-step [stepControl]="formDatosDireccion">
+                    <div mat-dialog-content class="px-24 pb-0 m-0">
+                        <ng-template matStepLabel>Datos Dirección</ng-template>
+                        <form [formGroup]="formDatosDireccion" novalidate>
+                            <div class="p-grid p-fluid">
+                                <div class="p-col-12">
+                                    <label>Dirección(*)</label>
+                                    <input type="text" pInputText autocomplete="off" name="direccion"
+                                        formControlName="direccion">
+                                </div>
+                            </div>
+                            <div class="p-grid p-fluid" style="margin-bottom: 8px;">
+                                <div class="p-col-12 p-md-4">
+                                    <label>Departamento</label>
+                                    <p-autoComplete name="departamento" formControlName="departamento"
+                                        [suggestions]="filteredElement"
+                                        (completeMethod)="filterElement($event, departamento)" field="descripcion"
+                                        (onSelect)="changeModelDepartamento()" emptyMessage='Sin resultados'
+                                        [dropdown]="true" appendTo="body">
+                                        <ng-template let-element>
+                                            <div>{{element.descripcion}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                    <mat-error
+                                        [ngStyle]="{'display': formDatosDireccion.get('departamento').dirty && !formDatosDireccion.get('departamento').valid ? 'block' : 'none' }">
+                                        No es una opción
+                                    </mat-error>
+                                </div>
+                                <div class="p-col-12 p-md-4">
+                                    <label>Provincia</label>
+                                    <p-autoComplete name="provincia" formControlName="provincia"
+                                        [suggestions]="filteredElement"
+                                        (completeMethod)="filterElement($event, provincia)" field="descripcion"
+                                        (onSelect)="changeModelProvincia()" emptyMessage='Sin resultados'
+                                        [dropdown]="true" appendTo="body">
+                                        <ng-template let-element>
+                                            <div>{{element.descripcion}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                    <mat-error
+                                        [ngStyle]="{'display': formDatosDireccion.get('provincia').dirty && !formDatosDireccion.get('provincia').valid ? 'block' : 'none' }">
+                                        No es una opción
+                                    </mat-error>
+                                </div>
+                                <div class="p-col-12 p-md-4">
+                                    <label>Distrito</label>
+                                    <p-autoComplete name="distrito" formControlName="distrito"
+                                        [suggestions]="filteredElement"
+                                        (completeMethod)="filterElement($event, distrito)" field="descripcion"
+                                        emptyMessage='Sin resultados' [dropdown]="true" appendTo="body">
+                                        <ng-template let-element>
+                                            <div>{{element.descripcion}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                    <mat-error
+                                        [ngStyle]="{'display': formDatosDireccion.get('distrito').dirty && !formDatosDireccion.get('distrito').valid ? 'block' : 'none' }">
+                                        No es una opción
+                                    </mat-error>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <br>
+                    <div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
+                        <button pButton matStepperPrevious type="button" label="Atrás"
+                            class="p-button-info ml-8"></button>
+                        <button pButton matStepperNext type="submit" label="Siguiente" class="p-button-info"></button>
+                    </div>
+                </mat-step>
+                <mat-step>
+                    <div mat-dialog-content class="px-24 pb-0 m-0">
+                        <ng-template matStepLabel>Datos Cuentas</ng-template>
+                        <div mat-dialog-content class="px-24 pb-0 m-0">
+                            <div class="p-grid p-fluid" style="margin-bottom: 8px;">
+                                <div class="p-col-12 p-md-6 p-lg-2">
+                                    <p-button icon="pi pi-id-card" label="Agregar Cuenta"
+                                        (click)="agregarCuenta()"></p-button>
+                                </div>
+                                <form [formGroup]="formAddCuentas" novalidate class="p-col-12">
+                                    <div formArrayName="cuentas">
+                                        <div *ngFor="let cuenta of cuentas.controls; index as i" [formGroupName]="i">
+                                            <div class="p-grid p-fluid">
+
+                                                <div class="p-col-12 p-md-6 p-lg-3">
+                                                    <label>Banco </label>
+                                                    <p-autoComplete name="banco" formControlName="banco"
+                                                        [suggestions]="filteredElement"
+                                                        (completeMethod)="filterElementBanco($event, banco)"
+                                                        (ngModelChange)="changeModelBanco($event, 'banco',i)"
+                                                        field="nombre" emptyMessage='Sin resultados' [dropdown]="true"
+                                                        appendTo="body">
+                                                        <ng-template let-element>
+                                                            <div>{{element.nombre}}</div>
+                                                        </ng-template>
+                                                    </p-autoComplete>
+                                                </div>
+                                                <div class="p-col-12 p-md-6 p-lg-2">
+                                                    <label>Tipo de cuenta </label>
+                                                    <p-autoComplete name="tipoCuenta" formControlName="tipoCuenta"
+                                                        [suggestions]="filteredElement"
+                                                        (completeMethod)="filterElement($event, tipoCuenta)"
+                                                        (ngModelChange)="changeModelTipoCuenta($event, 'tipoCuenta',i)"
+                                                        field="descripcion" emptyMessage='Sin resultados'
+                                                        [dropdown]="true" appendTo="body">
+                                                        <ng-template let-element>
+                                                            <div>{{element.descripcion}}</div>
+                                                        </ng-template>
+                                                    </p-autoComplete>
+                                                </div>
+                                                <div class="p-col-12 p-md-6 p-lg-2">
+                                                    <label>Tipo de moneda </label>
+                                                    <p-autoComplete name="tipoMoneda" formControlName="tipoMoneda"
+                                                        [suggestions]="filteredElement"
+                                                        (completeMethod)="filterElement($event, tipoMoneda)"
+                                                        (ngModelChange)="changeModelTipoMoneda($event, 'tipoMoneda',i)"
+                                                        field="descripcion" emptyMessage='Sin resultados'
+                                                        [dropdown]="true" appendTo="body">
+                                                        <ng-template let-element>
+                                                            <div>{{element.descripcion}}</div>
+                                                        </ng-template>
+                                                    </p-autoComplete>
+                                                </div>
+
+                                                <div class="p-col-12 p-md-6 p-lg-3">
+                                                    <label>núm. cuenta</label>
+                                                    <!-- <p-inputMask mask="9-9999-9999-9999"
+                                                        formControlName="numCuenta"></p-inputMask> -->
+                                                        <input type="text" pInputText name="numCuenta" formControlName="numCuenta" autocomplete="off">
+                                                </div>
+                                                <div class="p-md-1" style="padding-top: 37px;">
+                                                    <p-button (click)="quitarCuenta(i)" label="" icon="pi pi-trash"
+                                                        class="ui-button-danger" matTooltipPosition="above"
+                                                        matTooltip="Eliminar">
+                                                    </p-button>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
+                        <button pButton matStepperPrevious type="button" label="Atrás"
+                            class="p-button-info ml-8"></button>
+                        <button pButton matStepperNext [disabled]="!formAddCuentas.get('cuentas').valid" type="submit" label="Siguiente" class="p-button-info"></button>
+                    </div>
+                </mat-step>
+                <mat-step>
+                    <ng-template matStepLabel>Confirmar datos</ng-template>
+                    <div class="h2 m-16" fxLayout="row" fxLayoutAlign="center center">
+                        ¿Estás seguro de crear al proveedor?, presiona en crear para finalizar
+                    </div>
+                    <div mat-dialog-actions fxLayout="row" fxLayoutAlign="center center">
+                        <button pButton matStepperPrevious type="button" label="Atrás"
+                            class="p-button-info ml-8 mr-8"></button>
+                        <button pButton type="button" (click)="crearProveedor()" label="Crear"
+                            class="p-button-primary"></button>
+                    </div>
+                </mat-step>
+            </mat-vertical-stepper>
+            <!-- <button (click)="verForm()">Ver datos Form</button> -->
+        </div>
+    </div>
+</div>

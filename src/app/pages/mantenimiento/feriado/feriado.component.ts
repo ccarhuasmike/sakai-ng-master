@@ -23,6 +23,7 @@ import { ToastModule } from "primeng/toast";
 import { TooltipModule } from "primeng/tooltip";
 import { CALENDAR_DETAIL } from "@/layout/Utils/constants/aba.constants";
 import { AddFeriadoComponent } from "./modals/add-feriado/add-feriado.component";
+import { Breadcrumb } from "primeng/breadcrumb";
 
 
 @Component({
@@ -30,10 +31,12 @@ import { AddFeriadoComponent } from "./modals/add-feriado/add-feriado.component"
     templateUrl: './feriado.component.html',
     styleUrls: ['./feriado.component.scss'],
     standalone: true,
-    imports: [ConfirmDialogModule, TooltipModule, TabsModule, MenuModule, DividerModule, InputNumberModule, DatePickerModule, TableModule, MessageModule, ToastModule, ButtonModule, FileUploadModule, ReactiveFormsModule, CommonModule, InputTextModule, AutoCompleteModule],
+    imports: [Breadcrumb,ConfirmDialogModule, TooltipModule, TabsModule, MenuModule, DividerModule, InputNumberModule, DatePickerModule, TableModule, MessageModule, ToastModule, ButtonModule, FileUploadModule, ReactiveFormsModule, CommonModule, InputTextModule, AutoCompleteModule],
     providers: [DatePipe, MessageService, DialogService, ConfirmationService],
 })
 export class FeriadoComponent implements OnInit {
+    items: MenuItem[] = [{ label: 'Consulta', routerLink: '/uikit/cuenta' }, { label: 'Detalle Cuenta' }];
+    home: MenuItem = { icon: 'pi pi-home', routerLink: '/' };
     mostrarFiltro = false;
     panelOpenState = false;
     formBusqueda: FormGroup;
@@ -323,7 +326,7 @@ export class FeriadoComponent implements OnInit {
                 this.feriadoService.deleteFeriado(feriado.idCalendario).subscribe((resp: any) => {
                     if (resp) {
                         if (resp['codigo'] == 0) {
-                            this.toastr.add({ severity: 'success', summary: '', detail: 'Feriado eliminado' });                            
+                            this.toastr.add({ severity: 'success', summary: '', detail: 'Feriado eliminado' });
                             this.getFeriados();
                         } else {
                             this.toastr.add({ severity: 'error', summary: 'Error eliminarFeriado', detail: 'Error en el servicio de eliminar feriado' });

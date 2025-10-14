@@ -1,4 +1,11 @@
 <p-confirmdialog [style]="{ width: '450px' }" />
+<!-- <div class="grid grid-flow-row-dense sm:grid-cols-1 md:grid-cols-[20%_80%] gap-4"> -->
+<div class="grid grid-flow-row-dense sm:grid-cols-1 md:grid-cols-1 gap-4">
+    <div class="md:col-span-1">
+        <p-breadcrumb [home]="home" [model]="items" />
+    </div>
+</div>
+<br>
 <div class="card grid grid-flow-row-dense sm:grid-cols-1 md:grid-cols-1 gap-4">
     <div class="col-span-1 flex items-start justify-start gap-2">
         <form [formGroup]="formBusqueda" novalidate>
@@ -39,10 +46,8 @@
             <ng-template pTemplate="header" let-columns>
                 <tr>
                     <th scope="col" style="text-align: center; width: 10px;">
-
                         <p-button icon="pi pi-refresh" severity="secondary" pTooltip="Refrescar" showDelay="1000"
                             hideDelay="300" (click)="getFeriados()" rounded raised />
-
                     </th>
                     <th *ngFor="let col of columns">
                         {{col.header}}
