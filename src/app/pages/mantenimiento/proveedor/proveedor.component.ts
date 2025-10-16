@@ -25,6 +25,7 @@ import { CommonService } from "@/pages/service/commonService";
 import { Router } from "@angular/router";
 import { SelectModule } from "primeng/select";
 import { InputGroupModule } from "primeng/inputgroup";
+import { AddProveedorComponent } from "./add-proveedor/add-proveedor.component";
 
 @Component({
     selector: 'app-proveedor',
@@ -62,9 +63,7 @@ export class ProveedorComponent implements OnInit {
         this.getCombos();
         this.searchProveedor();
     }
-    agregarProveedor(): void {
-        this.router.navigate(['/apps/mantenimiento/proveedor/agregar']);
-    }
+   
     getCombos() {
         this.commonService.getMultipleCombosPromiseCliente(['documentos/tipos'])
             .then((resp: any) => {
@@ -352,6 +351,34 @@ export class ProveedorComponent implements OnInit {
 
     toggleSidebar(name: any): void {
         //this.fuseSidebarService.getSidebar(name).toggleOpen();
+    }
+
+    //  agregarProveedor(): void {
+    //     this.router.navigate(['/apps/mantenimiento/proveedor/agregar']);
+    // }
+      openDialogCrearProveedor() {
+
+        const dialogRef = this.dialog.open(AddProveedorComponent, {
+            header: 'CREAR Proveedor',
+            width: '50vw',
+            modal: true,
+            styleClass: 'header-modal',
+            dismissableMask: true,  // permite cerrar al hacer click fuera
+            data: null,
+            breakpoints: {
+                '960px': '75vw',
+                '640px': '90vw'
+            }
+        });
+
+        // const dialogRef = this.dialog.open(EditCuentasProveedorComponent, {
+        //     width: '900px',
+        //     data: data
+        // });
+
+        // dialogRef.afterClosed().subscribe((resp:any) => {
+        //     console.log(resp);
+        // })
     }
 
     openDialogEditCuentas(data: any) {

@@ -12,7 +12,7 @@
                     <button pButton label="Filtrar" icon="pi pi-filter" (click)="mostrarFiltro = !mostrarFiltro">
                     </button>
                     <button pButton label="Agregar" class="p-ripple p-button p-button-danger p-component"
-                        icon="pi pi-plus" (click)="agregarProveedor()"></button>
+                        icon="pi pi-plus" (click)="openDialogCrearProveedor()"></button>
                 </div>
             </div>
             <div *ngIf="mostrarFiltro" class="grid grid-flow-row-dense sm:grid-cols-1 md:grid-cols-4 gap-4 mt-4">
