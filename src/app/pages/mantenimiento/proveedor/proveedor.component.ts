@@ -26,6 +26,7 @@ import { Router } from "@angular/router";
 import { SelectModule } from "primeng/select";
 import { InputGroupModule } from "primeng/inputgroup";
 import { AddProveedorComponent } from "./add-proveedor/add-proveedor.component";
+import { EditProveedorComponent } from "./edit-proveedor/edit-proveedor.component";
 
 @Component({
     selector: 'app-proveedor',
@@ -63,7 +64,7 @@ export class ProveedorComponent implements OnInit {
         this.getCombos();
         this.searchProveedor();
     }
-   
+
     getCombos() {
         this.commonService.getMultipleCombosPromiseCliente(['documentos/tipos'])
             .then((resp: any) => {
@@ -356,7 +357,7 @@ export class ProveedorComponent implements OnInit {
     //  agregarProveedor(): void {
     //     this.router.navigate(['/apps/mantenimiento/proveedor/agregar']);
     // }
-      openDialogCrearProveedor() {
+    openDialogCrearProveedor() {
 
         const dialogRef = this.dialog.open(AddProveedorComponent, {
             header: 'CREAR Proveedor',
@@ -406,10 +407,26 @@ export class ProveedorComponent implements OnInit {
         // })
     }
     openDialogEditInfo(rowData: any) {
-        this.router.navigate([
-            '/apps/mantenimiento/proveedor/edit',
-            rowData.tipoDocIdentidad,
-            rowData.numeroDocIdentidad
-        ]);
+        const dialogRef = this.dialog.open(EditProveedorComponent, {
+            header: 'Editando Proveedor',
+            width: '50vw',
+            modal: true,
+            styleClass: 'header-modal',
+            dismissableMask: true,  // permite cerrar al hacer click fuera
+            data: {
+                tipo: rowData.tipoDocIdentidad,
+                doc: rowData.numeroDocIdentidad
+            },
+            breakpoints: {
+                '960px': '75vw',
+                '640px': '90vw'
+            }
+        });
+
+        // this.router.navigate([
+        //     '/apps/mantenimiento/proveedor/edit',
+        //     rowData.tipoDocIdentidad,
+        //     rowData.numeroDocIdentidad
+        // ]);
     }
 }
