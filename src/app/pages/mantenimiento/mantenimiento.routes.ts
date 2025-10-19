@@ -4,6 +4,7 @@ import { ParametroTipoCambioComponent } from './parametro/parametro-tipo-cambio/
 import { BancoComponent } from './banco/banco.component';
 import { FeriadoComponent } from './feriado/feriado.component';
 import { ProveedorComponent } from './proveedor/proveedor.component';
+import { CambioMonedaComponent } from './cambiomoneda/cambiomoneda.component';
 // import { ButtonDemo } from './buttondemo';
 // import { ChartDemo } from './chartdemo';
 // import { FileDemo } from './filedemo';
@@ -31,6 +32,7 @@ export default [
     { path: 'banco', data: { breadcrumb: 'Button' }, component: BancoComponent },
     { path: 'feriado', data: { breadcrumb: 'Button' }, component: FeriadoComponent },
     { path: 'proveedor', data: { breadcrumb: 'Button' }, component: ProveedorComponent },
+    { path: 'cambiomoneda', data: { breadcrumb: 'Button' }, component: CambioMonedaComponent },
     
   
     // { path: 'button', data: { breadcrumb: 'Button' }, component: ButtonDemo },

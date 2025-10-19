@@ -37,7 +37,7 @@ import { EditProveedorComponent } from "./edit-proveedor/edit-proveedor.componen
     encapsulation: ViewEncapsulation.None
 })
 export class ProveedorComponent implements OnInit {
-    items: MenuItem[] = [{ label: 'Consulta', routerLink: '/uikit/cuenta' }, { label: 'Detalle Cuenta' }];
+    items: MenuItem[] = [{ label: 'Mantenimiento', routerLink: '    /proveedor' }, { label: 'Consulta Proveedor' }];
     home: MenuItem = { icon: 'pi pi-home', routerLink: '/' };
     mostrarFiltro = false;
     formBusqueda!: FormGroup;

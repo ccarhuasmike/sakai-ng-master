@@ -48,7 +48,7 @@ export class BancoComponent implements OnInit {
     }
 
 
-      menuItems: any[] = [];
+    menuItems: any[] = [];
     onButtonClick(event: Event, rowData: any, menu: any) {
         this.menuItems = this.getMenuItems(rowData);
         menu.toggle(event);
@@ -74,7 +74,7 @@ export class BancoComponent implements OnInit {
 
         return items;
     }
-    
+
     getBancos() {
         this.loading = true
         this.data = [];
@@ -181,7 +181,7 @@ export class BancoComponent implements OnInit {
             modal: true,
             styleClass: 'header-modal',
             dismissableMask: true,  // permite cerrar al hacer click fuera
-            data:data,
+            data: data,
             breakpoints: {
                 '960px': '75vw',
                 '640px': '90vw'
