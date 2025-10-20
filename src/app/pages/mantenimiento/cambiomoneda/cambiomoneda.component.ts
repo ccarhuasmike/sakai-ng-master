@@ -484,6 +484,20 @@ export class CambioMonedaComponent implements OnInit {
     }
 
     openDialogAgregar() {
+
+         const dialogRef = this.dialog.open(AddCambioMonedaComponent, {
+            header: 'REGISTRAR CAMPAÑA',
+            width: '40vw',
+            modal: true,
+            styleClass: 'header-modal',
+            dismissableMask: true,  // permite cerrar al hacer click fuera
+            //data: data,
+            breakpoints: {
+                '960px': '75vw',
+                '640px': '90vw'
+            }
+        });
+
         // const dialogRef = this.dialog.open(AddCambioMonedaComponent, {
         //     width: '700px',
         //     data: null

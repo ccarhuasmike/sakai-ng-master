@@ -506,7 +506,7 @@ export class AddCambioMonedaComponent implements OnInit {
         this.formAddCabecera = new FormGroup({
             codigoCampana: new FormControl(''),
             nombreCampania: new FormControl('', [Validators.required]),
-            estadoCampania: new FormControl('null', [this.requireMatch, Validators.required]),
+            estadoCampania: new FormControl('', [this.requireMatch, Validators.required]),
             tipoCampania: new FormControl(null, [this.requireMatch, Validators.required]),
             tipoValidacion: new FormControl(null, [this.requireMatch, Validators.required]),
             montoValidacion: new FormControl(null, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]),
